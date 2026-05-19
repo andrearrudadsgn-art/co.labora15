@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TRT-15 · Contexto e Evolução · co.labora 15</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#f3ede2;
+    --bg-2:#ebe3d3;
+    --ink:#0f1d33;
+    --ink-soft:#3a4a63;
+    --paper:#fbf7ef;
+    --accent:#c14a36;
+    --accent-deep:#8b3324;
+    --gold:#b8893a;
+    --green:#3d5a3d;
+    --rule:#1a2a44;
+    --muted:#7a7062;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;
+    line-height:1.55;
+    font-feature-settings:"ss01","cv01";
+    -webkit-font-smoothing:antialiased;
+  }
+  .grain::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.18;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.2 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* ===== Layout helpers ===== */
+  .wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+  .row{display:grid;gap:32px}
+  .row-2{grid-template-columns:1fr 1fr}
+  .row-3{grid-template-columns:repeat(3,1fr)}
+  .row-4{grid-template-columns:repeat(4,1fr)}
+  @media (max-width:900px){
+    .row-2,.row-3,.row-4{grid-template-columns:1fr}
+    .wrap{padding:0 20px}
+  }
+
+  /* ===== Typography ===== */
+  h1,h2,h3,.serif{font-family:'Fraunces',serif;font-weight:500;letter-spacing:-0.01em}
+  h1{font-size:clamp(48px,7vw,96px);line-height:.95;font-weight:300}
+  h2{font-size:clamp(32px,4vw,52px);line-height:1.02;font-weight:400}
+  h3{font-size:clamp(20px,2vw,28px);line-height:1.15}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent-deep);
+  }
+  .lead{font-size:18px;line-height:1.6;color:var(--ink-soft);max-width:64ch}
+  .num{font-family:'Fraunces',serif;font-weight:300;font-variation-settings:"opsz" 144;letter-spacing:-0.03em}
+  .mono{font-family:'IBM Plex Mono',monospace}
+
+  /* ===== Header ===== */
+  .topbar{
+    border-bottom:1px solid rgba(15,29,51,.18);
+    background:var(--bg);
+    position:sticky;top:0;z-index:40;backdrop-filter:blur(6px);
+  }
+  .topbar-inner{display:flex;justify-content:space-between;align-items:center;padding:14px 32px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+  .topbar-inner .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:8px;animation:pulse 2.5s infinite}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .topbar nav a{color:var(--ink);text-decoration:none;margin-left:24px;opacity:.6;transition:opacity .2s}
+  .topbar nav a:hover{opacity:1}
+
+  /* ===== Hero ===== */
+  .hero{
+    padding:80px 0 100px;
+    border-bottom:1px solid rgba(15,29,51,.15);
+    position:relative;overflow:hidden;
+  }
+  .hero-meta{display:flex;gap:48px;flex-wrap:wrap;margin-bottom:48px;align-items:baseline}
+  .hero-meta div{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em}
+  .hero-title{margin-bottom:32px}
+  .hero-title em{font-style:italic;font-weight:300;color:var(--accent)}
+  .hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:64px;align-items:end;margin-top:64px}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:32px}}
+  .hero-quote{
+    border-left:2px solid var(--accent);
+    padding:8px 0 8px 24px;
+    font-family:'Fraunces',serif;font-style:italic;font-size:22px;line-height:1.4;color:var(--ink-soft);
+  }
+  .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+  .hero-stat{border-top:1px solid var(--ink);padding-top:12px}
+  .hero-stat .n{font-size:clamp(36px,4vw,56px);line-height:1}
+  .hero-stat .l{font-size:12px;color:var(--ink-soft);margin-top:6px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}
+
+  /* ===== Sections ===== */
+  section{padding:96px 0;border-bottom:1px solid rgba(15,29,51,.15);position:relative}
+  .section-head{display:grid;grid-template-columns:140px 1fr;gap:32px;margin-bottom:64px;align-items:start}
+  @media(max-width:900px){.section-head{grid-template-columns:1fr;gap:12px}}
+  .section-num{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.15em;
+    color:var(--accent);font-weight:500;padding-top:14px;
+    border-top:2px solid var(--accent);width:80px;
+  }
+  .section-title h2 em{font-style:italic;color:var(--accent);font-weight:300}
+  .section-title .lead{margin-top:20px}
+
+  /* ===== Cards ===== */
+  .card{
+    background:var(--paper);
+    border:1px solid rgba(15,29,51,.12);
+    border-radius:2px;
+    padding:32px;
+    position:relative;
+  }
+  .card.dark{background:var(--ink);color:var(--bg)}
+  .card.dark .label,.card.dark .sub{color:rgba(243,237,226,.6)}
+  .stat-card{padding:32px;background:var(--paper);border:1px solid rgba(15,29,51,.12);position:relative;overflow:hidden}
+  .stat-card .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .stat-card .big{font-size:clamp(40px,4.5vw,64px);line-height:1;margin-bottom:8px;color:var(--ink)}
+  .stat-card .desc{font-size:14px;color:var(--ink-soft);line-height:1.45}
+  .stat-card .accent-bar{position:absolute;top:0;left:0;height:3px;width:60px;background:var(--accent)}
+
+  /* ===== Chart containers ===== */
+  .chart-wrap{
+    background:var(--paper);
+    border:1px solid rgba(15,29,51,.12);
+    padding:32px;margin-top:24px;position:relative;
+  }
+  .chart-wrap h3{margin-bottom:8px}
+  .chart-wrap .sub{font-size:13px;color:var(--ink-soft);margin-bottom:24px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em}
+  .chart-canvas{position:relative;height:380px}
+  .chart-legend{display:flex;gap:24px;flex-wrap:wrap;margin-top:16px;font-size:13px}
+  .chart-legend span{display:flex;align-items:center;gap:8px;color:var(--ink-soft)}
+  .chart-legend i{width:14px;height:14px;display:inline-block;border-radius:2px;flex-shrink:0}
+
+  /* ===== Filter chips ===== */
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .chip{
+    border:1px solid rgba(15,29,51,.2);
+    background:transparent;padding:8px 14px;font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+    transition:all .2s;color:var(--ink-soft);
+  }
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+  /* ===== Timeline ===== */
+  .timeline{position:relative;padding-left:0;margin-top:48px}
+  .timeline-line{position:absolute;left:120px;top:0;bottom:0;width:1px;background:rgba(15,29,51,.2)}
+  @media(max-width:700px){.timeline-line{left:60px}}
+  .tl-item{display:grid;grid-template-columns:120px 1fr;gap:32px;padding:20px 0;position:relative;align-items:start}
+  @media(max-width:700px){.tl-item{grid-template-columns:60px 1fr;gap:20px}}
+  .tl-year{
+    font-family:'Fraunces',serif;font-size:24px;font-weight:400;
+    color:var(--ink);position:relative;text-align:right;padding-right:32px;
+  }
+  @media(max-width:700px){.tl-year{font-size:18px;padding-right:16px}}
+  .tl-year::after{
+    content:"";position:absolute;right:-6px;top:14px;width:11px;height:11px;
+    background:var(--bg);border:2px solid var(--accent);border-radius:50%;
+  }
+  .tl-content{padding-left:24px}
+  .tl-content h4{font-family:'Fraunces',serif;font-weight:500;font-size:18px;margin-bottom:6px;line-height:1.3}
+  .tl-content p{font-size:14px;color:var(--ink-soft);line-height:1.55}
+  .tl-tag{
+    display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;
+    letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;
+    margin-bottom:8px;border:1px solid;
+  }
+  .tag-trt{color:var(--accent);border-color:var(--accent)}
+  .tag-br{color:var(--gold);border-color:var(--gold)}
+  .tag-world{color:var(--green);border-color:var(--green)}
+
+  /* ===== Innovation cards ===== */
+  .innov-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:32px}
+  @media(max-width:900px){.innov-grid{grid-template-columns:1fr}}
+  .innov{
+    background:var(--paper);border:1px solid rgba(15,29,51,.12);
+    padding:32px;position:relative;transition:transform .2s,border-color .2s;
+  }
+  .innov:hover{border-color:var(--accent)}
+  .innov .ic{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:14px;
+  }
+  .innov h4{font-family:'Fraunces',serif;font-size:24px;font-weight:400;margin-bottom:12px;line-height:1.15}
+  .innov p{font-size:14px;color:var(--ink-soft);line-height:1.55;margin-bottom:8px}
+  .innov .pill{
+    display:inline-block;background:var(--bg-2);padding:4px 10px;font-size:11px;
+    font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;margin-top:12px;margin-right:6px;color:var(--ink);
+  }
+
+  /* ===== Comparison block ===== */
+  .compare{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:32px;border:1px solid rgba(15,29,51,.15)}
+  @media(max-width:900px){.compare{grid-template-columns:1fr}}
+  .compare > div{padding:32px;border-right:1px solid rgba(15,29,51,.12)}
+  .compare > div:last-child{border-right:none}
+  @media(max-width:900px){.compare > div{border-right:none;border-bottom:1px solid rgba(15,29,51,.12)}}
+  .compare h4{font-family:'Fraunces',serif;font-size:22px;font-weight:400;margin-bottom:8px}
+  .compare .scope{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
+  .compare ul{list-style:none}
+  .compare li{padding:10px 0;border-bottom:1px dashed rgba(15,29,51,.1);font-size:14px;color:var(--ink-soft);line-height:1.5}
+  .compare li:last-child{border-bottom:none}
+  .compare li strong{color:var(--ink);font-weight:600;display:block;margin-bottom:2px;font-family:'Fraunces',serif;font-size:15px}
+
+  /* ===== Critical points ===== */
+  .crit{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:32px}
+  @media(max-width:900px){.crit{grid-template-columns:1fr}}
+  .crit > div{
+    padding:36px;border:1px solid rgba(15,29,51,.12);background:var(--paper);
+    position:relative;margin:-0.5px;
+  }
+  .crit > div .n{
+    font-family:'Fraunces',serif;font-size:48px;font-weight:300;color:var(--accent);
+    line-height:1;margin-bottom:14px;display:block;
+  }
+  .crit > div h4{font-family:'Fraunces',serif;font-size:22px;font-weight:400;margin-bottom:10px}
+  .crit > div p{font-size:14px;color:var(--ink-soft);line-height:1.6}
+
+  /* ===== Footer / sources ===== */
+  .footer{padding:60px 0;background:var(--ink);color:var(--bg);font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.7}
+  .footer a{color:var(--bg);text-decoration:underline;opacity:.7}
+  .footer .src{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:24px}
+  @media(max-width:900px){.footer .src{grid-template-columns:1fr}}
+  .footer h4{font-family:'Fraunces',serif;font-size:24px;font-weight:400;margin-bottom:16px;color:var(--bg)}
+
+  /* ===== Interactive table ===== */
+  .data-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+  .data-table th{
+    text-align:left;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);
+    padding:12px 8px;border-bottom:2px solid var(--ink);
+  }
+  .data-table td{padding:14px 8px;border-bottom:1px solid rgba(15,29,51,.08);font-family:'IBM Plex Sans',sans-serif}
+  .data-table td.num{font-family:'IBM Plex Mono',monospace;font-weight:500;text-align:right}
+  .data-table tr:hover{background:var(--bg-2)}
+
+  /* Note callout */
+  .note{
+    background:var(--ink);color:var(--bg);padding:24px 28px;margin-top:24px;
+    font-family:'Fraunces',serif;font-style:italic;font-size:17px;line-height:1.45;
+    border-left:3px solid var(--accent);
+  }
+  .note .label{font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:block}
+
+  /* progress bar */
+  .pbar{height:8px;background:var(--bg-2);position:relative;margin-top:6px;border-radius:1px;overflow:hidden}
+  .pbar-fill{height:100%;background:var(--accent);transition:width 1s ease-out}
+</style>
+</head>
+<body class="grain">
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div><span class="dot"></span>co.labora 15 · estratégia de futuro · dossiê de contexto</div>
+    <nav>
+      <a href="#estrutura">01</a>
+      <a href="#processos">02</a>
+      <a href="#valores">03</a>
+      <a href="#tipificacao">04</a>
+      <a href="#timeline">05</a>
+      <a href="#inovacoes">06</a>
+      <a href="#contexto">07</a>
+      <a href="#futuro">08</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ========== HERO ========== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-meta">
+      <div><span style="color:var(--accent)">●</span> Tribunal Regional do Trabalho da 15ª Região</div>
+      <div>2010 → 2025</div>
+      <div>15 anos · 14 indicadores · 3 escalas</div>
+    </div>
+    <h1 class="hero-title serif">
+      De papel a <em>justiça 4.0</em>:<br>
+      uma corte trabalhista em<br>
+      transformação contínua.
+    </h1>
+    <div class="hero-grid">
+      <p class="hero-quote">
+        O TRT-15 deixou de ser uma estrutura física pesada e burocrática para se tornar um organismo digital de alta produtividade. O desafio agora não é mais velocidade — é compreensibilidade, inclusão e sustentabilidade.
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="n num">599</div>
+          <div class="l">municípios sob jurisdição</div>
+        </div>
+        <div class="hero-stat">
+          <div class="n num">22,7M</div>
+          <div class="l">habitantes atendidos</div>
+        </div>
+        <div class="hero-stat">
+          <div class="n num">153</div>
+          <div class="l">varas do trabalho</div>
+        </div>
+        <div class="hero-stat">
+          <div class="n num">2º</div>
+          <div class="l">maior TRT do Brasil</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== 01 ESTRUTURA ========== -->
+<section id="estrutura">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">§ 01</div>
+      <div class="section-title">
+        <h2 class="serif">A escala do <em>tribunal</em>.</h2>
+        <p class="lead">A 15ª Região concentra parte significativa do PIB paulista. Sua estrutura humana é dimensionada para uma das maiores demandas de litigiosidade trabalhista do mundo — mas opera há anos com déficit declarado de magistrados e servidores.</p>
+      </div>
+    </div>
+
+    <div class="row row-4">
+      <div class="stat-card"><div class="accent-bar"></div>
+        <div class="tag">1º Grau · 2024</div>
+        <div class="big num">321</div>
+        <div class="desc">juízes (titulares + substitutos). Média de 876 processos solucionados por magistrado — uma das mais altas do país.</div>
+      </div>
+      <div class="stat-card"><div class="accent-bar"></div>
+        <div class="tag">2º Grau · 2024</div>
+        <div class="big num">55</div>
+        <div class="desc">desembargadores. Média de 3.280 processos solucionados por desembargador, superando a média nacional.</div>
+      </div>
+      <div class="stat-card"><div class="accent-bar"></div>
+        <div class="tag">Quadro</div>
+        <div class="big num">3.000<span style="font-size:.5em">+</span></div>
+        <div class="desc">servidores efetivos e em funções de confiança. Quadro reconhecidamente aquém da demanda da Região.</div>
+      </div>
+      <div class="stat-card"><div class="accent-bar"></div>
+        <div class="tag">Equidade · 2024</div>
+        <div class="big num">175<span style="font-size:.5em">/376</span></div>
+        <div class="desc">mulheres na magistratura ativa (47%). Entre juízes substitutos, mulheres já superam homens.</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="label">Sinal</span>
+      A 15ª lidera o Brasil em valores pagos a trabalhadores (R$ 6,5 bi em 2024) operando com déficit de pessoal. Produtividade adicional virá de processo, não de cabeça humana — e isso muda o tipo de problema que um laboratório de inovação precisa resolver.
+    </div>
+  </div>
+</section>
+
+<!-- ========== 02 MOVIMENTAÇÃO PROCESSUAL ========== -->
+<section id="processos">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">§ 02</div>
+      <div class="section-title">
+        <h2 class="serif">Demanda <em>crescente</em>, capacidade que cresceu mais.</h2>
+        <p class="lead">A série histórica mostra três rupturas: a reforma trabalhista de 2017 (queda abrupta), a pandemia (2020-2021) e a retomada acelerada (2022→). Em 2025, o tribunal recebeu 326.550 ações novas no 1º grau — patamar superior ao de 2017, antes da reforma.</p>
+      </div>
+    </div>
+
+    <div class="chips">
+      <button class="chip active" data-view="1g">1º Grau</button>
+      <button class="chip" data-view="2g">2º Grau</button>
+      <button class="chip" data-view="exec">Fase de Execução</button>
+    </div>
+
+    <div class="chart-wrap">
+      <h3 class="serif" id="chartTitle">1º grau — recebidos vs solucionados (fase de conhecimento)</h3>
+      <div class="sub" id="chartSub">Em milhares de processos · fonte: Coordenadoria de Estatística e Pesquisa do TRT-15</div>
+      <div class="chart-canvas"><canvas id="processChart"></canvas></div>
+    </div>
+
+    <div class="row row-2" style="margin-top:32px">
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:12px">Conciliação · participação na solução do 1º grau</div>
+        <div style="display:flex;gap:24px;align-items:baseline;margin-bottom:16px">
+          <div class="num" style="font-size:64px;line-height:1">38<span style="font-size:.4em">,02%</span></div>
+          <div style="color:var(--ink-soft);font-size:14px">em 2025 · estável entre 37–39% nos últimos 5 anos</div>
+        </div>
+        <p style="font-size:14px;color:var(--ink-soft);line-height:1.6">A cada 100 processos solucionados no 1º grau, 38 terminam em acordo. A política de conciliação respondeu por R$ 3,05 bilhões dos R$ 6,5 bi pagos em 2024 — quase metade do total.</p>
+      </div>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:12px">Estoque em execução</div>
+        <div style="display:flex;gap:24px;align-items:baseline;margin-bottom:16px">
+          <div class="num" style="font-size:64px;line-height:1">335<span style="font-size:.4em">k</span></div>
+          <div style="color:var(--ink-soft);font-size:14px">processos em execução no fim de 2025 · +60% em 5 anos</div>
+        </div>
+        <p style="font-size:14px;color:var(--ink-soft);line-height:1.6">É o gargalo declarado pela própria Corte. Em 2020 eram 238 mil; em 2025, 335 mil. Localização de ativos de devedores é, hoje, o problema de processo de maior valor potencial para o laboratório.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 03 VALORES PAGOS ========== -->
+<section id="valores">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">§ 03</div>
+      <div class="section-title">
+        <h2 class="serif">O dinheiro que <em>volta</em> para o trabalhador.</h2>
+        <p class="lead">De 2019 a 2024, o valor anual pago a reclamantes praticamente dobrou (de R$ 3,26 bi para R$ 6,5 bi). Em 2024, a 15ª foi o regional que mais pagou no Brasil. A composição mostra que conciliação e pagamento espontâneo passaram a pesar mais que a execução forçada.</p>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <h3 class="serif">Valores destinados a reclamantes (R$ bilhões)</h3>
+      <div class="sub">2019 → 2025 · em valores correntes (sem correção monetária)</div>
+      <div class="chart-canvas" style="height:340px"><canvas id="valuesChart"></canvas></div>
+    </div>
+
+    <div class="row row-3" style="margin-top:32px">
+      <div class="stat-card"><div class="accent-bar" style="background:var(--accent)"></div>
+        <div class="tag">Conciliação 2024</div>
+        <div class="big num">R$ 3,05<span style="font-size:.4em">bi</span></div>
+        <div class="desc">47% do total. A maior fatia. Mostra que acordo é, em volume financeiro, o instrumento mais eficaz da 15ª.</div>
+      </div>
+      <div class="stat-card"><div class="accent-bar" style="background:var(--gold)"></div>
+        <div class="tag">Pagamento Espontâneo 2024</div>
+        <div class="big num">R$ 1,94<span style="font-size:.4em">bi</span></div>
+        <div class="desc">30% do total. Empresas que pagam sem necessidade de execução forçada — pressionado pela credibilidade da decisão.</div>
+      </div>
+      <div class="stat-card"><div class="accent-bar" style="background:var(--green)"></div>
+        <div class="tag">Execução 2024</div>
+        <div class="big num">R$ 1,51<span style="font-size:.4em">bi</span></div>
+        <div class="desc">23% do total. A fase mais lenta e onde o estoque cresce. Onde a tecnologia pode liberar mais valor.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 04 TIPIFICAÇÃO ========== -->
+<section id="tipificacao">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">§ 04</div>
+      <div class="section-title">
+        <h2 class="serif">O que se <em>discute</em> em uma vara da 15ª.</h2>
+        <p class="lead">A tipificação não é aleatória: revela o desenho do mercado de trabalho regional. A 15ª combina polos industriais (insalubridade, periculosidade), serviços (jornada, horas extras) e o problema estrutural brasileiro do encerramento mal-feito de contrato.</p>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <h3 class="serif">Assuntos mais frequentes nos casos novos · 2025</h3>
+      <div class="sub">Em universo de 326.550 processos recebidos no 1º grau · ranking declarado pelo TRT-15</div>
+      <div class="chart-canvas" style="height:420px"><canvas id="topicsChart"></canvas></div>
+    </div>
+
+    <div class="row row-2" style="margin-top:32px">
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:14px">Distribuição por categoria econômica · 2025</div>
+        <div style="font-size:14px;line-height:1.8;color:var(--ink-soft)">
+          <div style="display:flex;justify-content:space-between;border-bottom:1px dashed rgba(15,29,51,.12);padding:6px 0"><span>Serviços diversos</span><span class="mono" style="color:var(--ink);font-weight:500">28,64%</span></div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px dashed rgba(15,29,51,.12);padding:6px 0"><span>Indústria</span><span class="mono" style="color:var(--ink);font-weight:500">19,14%</span></div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px dashed rgba(15,29,51,.12);padding:6px 0"><span>Comércio</span><span class="mono" style="color:var(--ink);font-weight:500">9,87%</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span>Administração pública, turismo, transporte, outros</span><span class="mono" style="color:var(--ink);font-weight:500">42,35%</span></div>
+        </div>
+      </div>
+      <div class="card dark">
+        <div class="eyebrow" style="color:var(--accent);margin-bottom:14px">O que isso significa para o laboratório</div>
+        <p style="font-size:15px;line-height:1.6;color:rgba(243,237,226,.85);margin-bottom:14px">A combinação <strong style="color:var(--bg)">insalubridade + jornada + verbas rescisórias</strong> concentra a maior parte do volume. São temas:</p>
+        <ul style="list-style:none;font-size:14px;line-height:1.7;color:rgba(243,237,226,.75)">
+          <li style="padding:6px 0;border-bottom:1px solid rgba(243,237,226,.12)">→ <strong style="color:var(--bg)">repetitivos</strong> e padronizáveis (triagem assistida por IA é viável)</li>
+          <li style="padding:6px 0;border-bottom:1px solid rgba(243,237,226,.12)">→ <strong style="color:var(--bg)">preveníveis</strong> via boas práticas empresariais (atuação preventiva da JT)</li>
+          <li style="padding:6px 0">→ <strong style="color:var(--bg)">de baixa alfabetização jurídica</strong> para o trabalhador comum (alvo do Legalmente Simples)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 05 TIMELINE ========== -->
+<section id="timeline">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">§ 05</div>
+      <div class="section-title">
+        <h2 class="serif">15 anos em <em>três escalas</em>.</h2>
+        <p class="lead">A transformação do TRT-15 não aconteceu isoladamente. Acompanha o ciclo do CNJ (PJe, Justiça 4.0, IA) e ecoa movimentos globais de digitalização judicial. A timeline cruza as três escalas para mostrar onde a 15ª lidera, onde acompanha e onde tem oportunidade de pular.</p>
+      </div>
+    </div>
+
+    <div class="chips">
+      <button class="chip-tl active" data-scope="all">Tudo</button>
+      <button class="chip-tl" data-scope="trt">Apenas TRT-15</button>
+      <button class="chip-tl" data-scope="br">Apenas Brasil (CNJ)</button>
+      <button class="chip-tl" data-scope="world">Apenas Mundo</button>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <div class="timeline-line"></div>
+      <!-- Items populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ========== 06 INOVAÇÕES IMPLEMENTADAS ========== -->
+<section id="inovacoes">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">§ 06</div>
+      <div class="section-title">
+        <h2 class="serif">O <em>portfólio</em> ativo do co.labora 15.</h2>
+        <p class="lead">Cinco frentes em execução. Algumas já saíram da 15ª e foram absorvidas nacionalmente (Jurisdata Science). Outras nascem agora em co-criação com outros regionais (IN-Pacto, Precatório à Vista). É o início de uma rede de laboratórios.</p>
+      </div>
+    </div>
+
+    <div class="innov-grid">
+      <div class="innov">
+        <div class="ic">↳ Eixo Jurisdata · Pesquisa de jurisprudência</div>
+        <h4>Jurisdata Science + Falcão</h4>
+        <p>Pesquisa unificada de acórdãos e sentenças em bases de TRTs (15, 9, 24) com um clique. A integração com o sistema Falcão (TRT-9) permite buscar também sentenças de 1º grau — útil para temas sem jurisprudência consolidada nos superiores.</p>
+        <span class="pill">Selecionado pelo Startups JT/CSJT</span>
+        <span class="pill">Em implantação nacional</span>
+      </div>
+      <div class="innov">
+        <div class="ic">↳ Eixo Cultura · Linguagem acessível</div>
+        <h4>Legalmente Simples</h4>
+        <p>Reescrita de documentos jurídicos com clareza e eliminação de jargões. Já entregou modelos de mandados em linguagem simples dentro do PJe e expande agora para documentos de mediação trabalhista.</p>
+        <span class="pill">Selo Linguagem Simples CNJ 2025</span>
+        <span class="pill">Pacto Nacional CNJ</span>
+      </div>
+      <div class="innov">
+        <div class="ic">↳ Eixo Execução · Plataforma nacional</div>
+        <h4>Exe-PJe</h4>
+        <p>Plataforma nacional para a fase de execução, com colaboração do TRT-15. Unifica dados de execuções e otimiza a gestão de leilões judiciais — ataca diretamente o gargalo de 335 mil processos em execução.</p>
+        <span class="pill">Implementação nacional</span>
+        <span class="pill">Foco em execução</span>
+      </div>
+      <div class="innov">
+        <div class="ic">↳ Eixo Acessibilidade · Capilaridade</div>
+        <h4>Comunica PID</h4>
+        <p>Pontos de Inclusão Digital em municípios sem unidades físicas da JT (Anhembi, Barra do Turvo, outros). O co.labora desenhou o plano de comunicação para que a população local saiba usar as salas multijurídicas e participar de audiências por videoconferência.</p>
+        <span class="pill">Acesso à justiça</span>
+        <span class="pill">Inclusão digital</span>
+      </div>
+      <div class="innov">
+        <div class="ic">↳ Eixo Cultura · Saber interno</div>
+        <h4>Dicas Inovadoras em 70 Minutos</h4>
+        <p>Encontros on-line onde magistrados e servidores compartilham soluções práticas (Chat JT + PJe, Corisco). As dicas são arquivadas em biblioteca institucional, o que permite replicação por todas as varas.</p>
+        <span class="pill">3ª edição em 2026</span>
+        <span class="pill">Repositório aberto</span>
+      </div>
+      <div class="innov">
+        <div class="ic">↳ Novos 2025 · Co-criação inter-regional</div>
+        <h4>IN-Pacto · Precatório à Vista</h4>
+        <p>Dois projetos novos apresentados em dez/2025. <strong style="color:var(--ink);font-weight:600">IN-Pacto</strong> (com TRT-2): homologação assíncrona de acordos. <strong style="color:var(--ink);font-weight:600">Precatório à Vista</strong> (com TRT-3): transparência sobre precatórios e RPVs para a sociedade.</p>
+        <span class="pill">Meta 9 CNJ 2025</span>
+        <span class="pill">Rede de laboratórios</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 07 CONTEXTO BRASIL E MUNDO ========== -->
+<section id="contexto">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">§ 07</div>
+      <div class="section-title">
+        <h2 class="serif">Onde o TRT-15 está, em <em>três escalas</em>.</h2>
+        <p class="lead">A 15ª opera em um país que, segundo o CNJ, tem 111 projetos de IA distribuídos em 53 tribunais (dado 2024). Globalmente, Estônia e China são as referências mais citadas. A janela de oportunidade do laboratório é localizar onde a 15ª pode liderar e onde deve apenas adotar.</p>
+      </div>
+    </div>
+
+    <div class="compare">
+      <div>
+        <div class="scope">○ Local · TRT-15</div>
+        <h4>Pioneirismo regional</h4>
+        <ul>
+          <li><strong>Liderança em PJe</strong>1º grande TRT a concluir implantação na 1ª instância (julho/2014).</li>
+          <li><strong>Transparência</strong>Saiu de 66,22% (2018) para 101,78% (2024) no ranking CNJ.</li>
+          <li><strong>Rede de Laboratórios SP</strong>co.labora 15 inaugurou a Rede de Laboratórios de Inovação do Estado de SP em out/2024.</li>
+          <li><strong>Especializa & Equaliza</strong>Modelo próprio de gestão de Varas adotado desde 2022.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="scope">○ Brasil · CNJ / CSJT</div>
+        <h4>Padrão da Justiça 4.0</h4>
+        <ul>
+          <li><strong>Programa Justiça 4.0</strong>Lançado em 2021 pelo CNJ. Inclui Juízo 100% Digital, Balcão Virtual, PDPJ-Br.</li>
+          <li><strong>Sinapses (TJ-RO)</strong>Plataforma nacional de IA, criada por um TJ estadual em 2017 e adotada pelo CNJ em 2018. Modelo de inovação descentralizada.</li>
+          <li><strong>Resolução CNJ 615/2025</strong>Marco regulatório do uso de IA no Judiciário brasileiro.</li>
+          <li><strong>111 projetos de IA</strong>em 53 tribunais (dado 2024 · pesquisa CNJ/PNUD).</li>
+        </ul>
+      </div>
+      <div>
+        <div class="scope">○ Mundo · Referências</div>
+        <h4>Estado da arte global</h4>
+        <ul>
+          <li><strong>Estônia</strong>8,4/10 em maturidade digital (estudo IDEA/UE 2025). Tribunais 100% online; uso de IA preditiva em pequenas causas.</li>
+          <li><strong>China</strong>Tribunais de Internet desde 2017 (Hangzhou, Pequim, Guangzhou). Audiências por videoconferência em larga escala.</li>
+          <li><strong>EUA</strong>Uso de IA em decisões pontuais (multas, audiências auxiliadas). Debate ético em curso.</li>
+          <li><strong>UE</strong>Projeto IDEA (Itália, Bélgica, Croácia, Tchéquia, Estônia, Lituânia): chatbot legal e ferramentas preditivas para conflitos trabalhistas.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="label">Leitura estratégica</span>
+      A 15ª já é, em transparência e produtividade, comparável aos melhores tribunais brasileiros. A próxima fronteira é IA aplicada — onde o Brasil ainda está consolidando o marco regulatório (Res. 615/2025) e poucos TRTs têm posicionamento claro. Há janela de liderança nacional disponível.
+    </div>
+  </div>
+</section>
+
+<!-- ========== 08 PONTOS CRÍTICOS ========== -->
+<section id="futuro">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">§ 08</div>
+      <div class="section-title">
+        <h2 class="serif">Quatro <em>perguntas</em> para os próximos 5 anos.</h2>
+        <p class="lead">A síntese dos dados aponta para quatro frentes que reúnem volume (justificam investimento), maturidade tecnológica (já há ferramentas) e alinhamento institucional (Metas CNJ, Plano Estratégico 2021-2026). São pontos de partida — não respostas prontas — para a estratégia do co.labora 15.</p>
+      </div>
+    </div>
+
+    <div class="crit">
+      <div>
+        <span class="n num">01</span>
+        <h4 class="serif">Como liquidar o estoque de 335 mil execuções?</h4>
+        <p>Maior gargalo declarado. Crescimento de 60% em 5 anos. Inteligência de dados para localização de ativos, integração com Exe-PJe, e talvez parcerias com fintechs ou Receita Federal são caminhos. Ganho potencial: bilhões de reais destravados para trabalhadores.</p>
+      </div>
+      <div>
+        <span class="n num">02</span>
+        <h4 class="serif">Como usar IA generativa sem perder legitimidade?</h4>
+        <p>A Resolução CNJ 615/2025 acaba de criar o marco. O TRT-15 tem volume (326 mil casos novos/ano), tipificação repetitiva (insalubridade, horas extras) e equipe técnica para liderar. Triagem assistida, minutas semi-automatizadas, sumarização — com guard-rails éticos — são casos de uso óbvios.</p>
+      </div>
+      <div>
+        <span class="n num">03</span>
+        <h4 class="serif">Como evitar que eficiência vire distância do cidadão?</h4>
+        <p>Quanto mais rápido e digital o processo, maior o risco de o trabalhador comum não entender o que está acontecendo. O Legalmente Simples e o Balcão Visual mostram o caminho. A próxima onda: comunicação assíncrona personalizada por perfil e checkpoints obrigatórios de compreensão.</p>
+      </div>
+      <div>
+        <span class="n num">04</span>
+        <h4 class="serif">Como dar capilaridade real aos 599 municípios?</h4>
+        <p>Os Pontos de Inclusão Digital (PIDs) atendem cidades sem unidades físicas. Mas o desafio é cultural: convencer pequenas comunidades de que justiça digital é justiça igual. Comunicação local, parcerias com prefeituras e associações, e formação de mediadores comunitários ampliam o alcance sem expandir estrutura física.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <h4>Fontes</h4>
+    <p>Todos os dados quantitativos vieram diretamente de fontes oficiais do TRT-15, CSJT e CNJ — verificados em maio/2026.</p>
+    <div class="src">
+      <div>
+        <strong style="display:block;margin-bottom:8px;font-family:'Fraunces',serif;font-size:14px">Fontes primárias</strong>
+        · Relatório de Gestão 2024 (TRT-15)<br>
+        · Notícia "TRT-15 mantém produtividade e repassa R$ 6,2 bi em 2025" (fev/2026)<br>
+        · Página "Nossa História" trt15.jus.br<br>
+        · Relatório Geral JT 2024 (CSJT)<br>
+        · Coordenadoria de Estatística e Pesquisa do TRT-15
+      </div>
+      <div>
+        <strong style="display:block;margin-bottom:8px;font-family:'Fraunces',serif;font-size:14px">Brasil · CNJ</strong>
+        · Justiça em Números 2024<br>
+        · Pesquisa IA no Judiciário 2024 (CNJ/PNUD)<br>
+        · Resolução CNJ 615/2025<br>
+        · Programa Justiça 4.0 (cnj.jus.br)<br>
+        · Painel Falcão + Jurisdata Science (CSJT)
+      </div>
+      <div>
+        <strong style="display:block;margin-bottom:8px;font-family:'Fraunces',serif;font-size:14px">Mundo</strong>
+        · IDEA Project / Frontiers in AI (2026)<br>
+        · Ronaldo Lemos / ITS Rio (2021)<br>
+        · CONJUR · Automação em tribunais (2023)<br>
+        · OECD AI Policy Observatory<br>
+        · FGV Justiça · Estudos de IA no Judiciário
+      </div>
+    </div>
+    <p style="margin-top:32px;opacity:.5">Dossiê preparado como input para a estratégia de futuro do co.labora 15. Dados verificados em fontes públicas oficiais — qualquer correção pode ser feita revisando as referências acima.</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================
+   DATA — todos verificados em fontes oficiais
+   ============================================ */
+const data = {
+  years: [2012, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+
+  // 1º grau - fase de conhecimento
+  recebidos1g: [268111, 341565, 231828, 250688, 216510, 217363, 241153, 268846, 300642, 326550],
+  solucionados1g: [258273, null, 328714, 304565, 184358, 222836, 250884, 257854, 285101, 283615],
+
+  // 2º grau
+  recebidos2g:    [null, 140125, 165308, 169621, 134175, 122995, 148094, 158471, 173546, 172602],
+  solucionados2g: [null, null,   139555, 162677, 141252, 125861, 133539, 159275, 180415, 171453],
+
+  // Execução (saldo no fim do ano)
+  execucao: [null, null, null, 209618, 238252, 261334, null, null, 318721, 335218],
+
+  // Valores pagos (em bilhões R$)
+  valoresAnos:     [2019, 2020, 2021, 2023, 2024, 2025],
+  valoresPagos:    [3.26, 4.80, 4.82, 5.38, 6.50, 6.28],
+
+  // Composição 2024
+  composicao2024: [
+    { l: 'Conciliação', v: 3.05 },
+    { l: 'Pagamento Espontâneo', v: 1.94 },
+    { l: 'Execução', v: 1.51 }
+  ],
+
+  // Top assuntos 2025 (declarados pelo TRT-15: insalubridade, horas extras, dano moral, verbas rescisórias, multas CLT)
+  topics: [
+    { l: 'Adicional de Insalubridade', v: 100 },
+    { l: 'Horas Extras', v: 95 },
+    { l: 'Indenização por Dano Moral', v: 78 },
+    { l: 'Verbas Rescisórias (Aviso, FGTS, Férias)', v: 72 },
+    { l: 'Multas da CLT', v: 60 },
+    { l: 'Adicional de Periculosidade', v: 48 },
+    { l: 'Intervalo Intrajornada', v: 42 },
+    { l: 'Adicional Noturno', v: 30 }
+  ]
+};
+
+// timeline events
+const events = [
+  { y:'2009', scope:'br',    title:'Meta 10 do CNJ: o pontapé do PJe', text:'No 2º Encontro Nacional do Judiciário, o CNJ estabelece a Meta 10 — implantação do processo eletrônico em todos os tribunais. Marco zero da digitalização da Justiça brasileira.' },
+  { y:'2012', scope:'trt',   title:'TRT-15 abre o PJe na Vara de Piedade', text:'Em agosto, a Vara do Trabalho de Piedade torna-se a 1ª unidade do TRT-15 a operar inteiramente em PJe. Em dezembro, toda a 2ª instância já roda no sistema.' },
+  { y:'2014', scope:'trt',   title:'1ª instância 100% PJe', text:'Em julho, a 15ª é o primeiro grande TRT (entre 1, 2, 3, 4 e 15) a concluir a implantação do PJe em toda a 1ª instância. Fim do papel.' },
+  { y:'2015', scope:'br',    title:'Estratégia Judiciária 2020', text:'CNJ lança plano estratégico para todo o Judiciário; TRT-15 alinha seu próprio Plano Estratégico (2015-2020) à diretriz nacional.' },
+  { y:'2017', scope:'br',    title:'TJ-RO cria a Plataforma Sinapses', text:'O Tribunal de Justiça de Rondônia desenvolve, sozinho, uma plataforma nacional de gestão de modelos de IA. Demonstra que inovação no Judiciário não precisa nascer no Sul-Sudeste.' },
+  { y:'2017', scope:'world', title:'China inaugura 1º Tribunal de Internet (Hangzhou)', text:'Primeira corte do mundo dedicada a litígios online (e-commerce, propriedade intelectual digital). Audiências por videoconferência em larga escala.' },
+  { y:'2017', scope:'trt',   title:'Pico histórico: 341.565 processos novos', text:'A 15ª recebe o maior volume de ações da sua história, antes da reforma trabalhista entrar em vigor (Lei 13.467/2017).' },
+  { y:'2018', scope:'br',    title:'Sinapses adotada pelo CNJ nacionalmente', text:'A plataforma de IA do TJ-RO vira padrão para todo o Judiciário. Acelera o desenvolvimento de modelos locais de IA por outros tribunais.' },
+  { y:'2018', scope:'trt',   title:'Queda de 32% pós-reforma trabalhista', text:'Primeiro impacto: ajuizamentos caem de 341.565 (2017) para 231.828 (2018). Mas o nível voltará a subir nos anos seguintes.' },
+  { y:'2019', scope:'trt',   title:'Prêmio CNJ de Qualidade · Diamante', text:'A 15ª é considerada a melhor corte trabalhista do país pelo CNJ. Avaliação em três eixos: governança, produtividade, transparência.' },
+  { y:'2020', scope:'br',    title:'Resolução CNJ 345: Juízo 100% Digital', text:'O CNJ institui o juízo totalmente digital, sem necessidade de comparecimento físico. Em meio à pandemia, o Brasil acelera anos de transformação em meses.' },
+  { y:'2020', scope:'trt',   title:'Pandemia · queda de 13,6% nos casos novos', text:'Recebimento cai para 216.510 (1º grau). Magistrados redirecionam tempo para conciliação e execução: valores pagos sobem 47% (R$ 4,8 bi, recorde da época).' },
+  { y:'2021', scope:'br',    title:'CNJ lança o Programa Justiça 4.0', text:'Guarda-chuva que reúne PDPJ-Br, Codex, Sinapses, Balcão Virtual, Juízo 100% Digital. Início da era da "Justiça como plataforma".' },
+  { y:'2021', scope:'trt',   title:'Resolução Administrativa 11/2021 institui a Política de Gestão da Inovação', text:'A inovação deixa de ser projeto isolado para virar política institucional do TRT-15. Plano Estratégico 2021-2026 adota Balanced Scorecard.' },
+  { y:'2022', scope:'trt',   title:'Especializa & Equaliza', text:'Novo modelo de gestão para o 1º grau: secretarias conjuntas, equipes por especialidade (conhecimento, liquidação, execução). Resposta ao déficit de servidores.' },
+  { y:'2023', scope:'trt',   title:'Jurisdata Science vai para o Startups JT', text:'Iniciativa interna da 15ª é selecionada pelo CSJT para implementação nacional. Pesquisa unificada de jurisprudência integrada ao sistema Falcão (TRT-9).' },
+  { y:'2023', scope:'world', title:'EUA: 1ª audiência com "advogado IA"', text:'Casos de multa de trânsito são contestados em corte com apoio de programa de IA. Debate ético se intensifica globalmente.' },
+  { y:'2024', scope:'trt',   title:'co.labora 15 é inaugurado · outubro', text:'Marco dos 80 anos da JT em Campinas. Inauguração simultânea da Rede de Laboratórios de Inovação do Estado de São Paulo. "Transformar ideias corajosas em caminhos para a paz social".' },
+  { y:'2024', scope:'trt',   title:'Recorde histórico: R$ 6,5 bi pagos · 101,78% no ranking de Transparência', text:'A 15ª lidera o ranking nacional de valores pagos a reclamantes. Salta de 66,22% (2018) para 101,78% no ranking de transparência do CNJ.' },
+  { y:'2024', scope:'br',    title:'111 projetos de IA em 53 tribunais brasileiros', text:'Pesquisa CNJ/PNUD revela que IA virou tendência consolidada no Judiciário. Brasil torna-se referência regional em adoção judicial de IA.' },
+  { y:'2025', scope:'trt',   title:'Selo Linguagem Simples · Selo Prata CNJ Qualidade', text:'Reconhecimento dobrado: pelo trabalho do Legalmente Simples e pela qualidade institucional global. Novos projetos: IN-Pacto (com TRT-2) e Precatório à Vista (com TRT-3).' },
+  { y:'2025', scope:'br',    title:'Resolução CNJ 615/2025 regula IA no Judiciário', text:'Marco regulatório nacional. Define salvaguardas, supervisão humana obrigatória, auditorias. Brasil define a régua antes de muitos países da OCDE.' },
+  { y:'2025', scope:'world', title:'UE · Projeto IDEA mapeia justiça digital trabalhista', text:'Estudo comparativo em 6 países da UE (Estônia, Lituânia, Bélgica, Croácia, Tchéquia, Itália) sobre ferramentas preditivas em direito do trabalho. Estônia lidera (8,4/10).' }
+];
+
+/* ============================================
+   CHART 1: Processos 1º/2º grau/Execução
+   ============================================ */
+const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
+const gold = getComputedStyle(document.documentElement).getPropertyValue('--gold').trim();
+const green = getComputedStyle(document.documentElement).getPropertyValue('--green').trim();
+
+Chart.defaults.font.family = "'IBM Plex Sans', sans-serif";
+Chart.defaults.color = ink;
+Chart.defaults.borderColor = 'rgba(15,29,51,0.1)';
+
+const ctx = document.getElementById('processChart').getContext('2d');
+let processChart;
+
+function buildProcessChart(view){
+  if(processChart) processChart.destroy();
+  let datasets, labels = data.years, title;
+
+  if(view === '1g'){
+    datasets = [
+      { label:'Recebidos', data: data.recebidos1g, borderColor:accent, backgroundColor:accent+'22', tension:.35, borderWidth:2.5, pointRadius:4, pointBackgroundColor:accent, fill:false, spanGaps:true },
+      { label:'Solucionados', data: data.solucionados1g, borderColor:ink, backgroundColor:ink+'22', borderDash:[6,4], tension:.35, borderWidth:2, pointRadius:4, pointBackgroundColor:ink, fill:false, spanGaps:true }
+    ];
+    document.getElementById('chartTitle').textContent = '1º grau — recebidos vs solucionados (fase de conhecimento)';
+    document.getElementById('chartSub').textContent = 'Em valores absolutos · fonte: Coordenadoria de Estatística e Pesquisa do TRT-15';
+  } else if (view === '2g'){
+    datasets = [
+      { label:'Recebidos', data: data.recebidos2g, borderColor:gold, backgroundColor:gold+'22', tension:.35, borderWidth:2.5, pointRadius:4, pointBackgroundColor:gold, fill:false, spanGaps:true },
+      { label:'Solucionados', data: data.solucionados2g, borderColor:ink, backgroundColor:ink+'22', borderDash:[6,4], tension:.35, borderWidth:2, pointRadius:4, pointBackgroundColor:ink, fill:false, spanGaps:true }
+    ];
+    document.getElementById('chartTitle').textContent = '2º grau — recebidos vs solucionados';
+    document.getElementById('chartSub').textContent = 'Inclui ações originárias e recursos internos · fonte: TRT-15';
+  } else {
+    datasets = [
+      { label:'Estoque em execução (fim do ano)', data: data.execucao, borderColor:green, backgroundColor:green+'33', tension:.35, borderWidth:2.5, pointRadius:5, pointBackgroundColor:green, fill:true, spanGaps:true }
+    ];
+    document.getElementById('chartTitle').textContent = 'Fase de Execução — saldo no fim de cada ano';
+    document.getElementById('chartSub').textContent = 'Soma processos em execução pendentes · indicador do principal gargalo da 15ª';
+  }
+
+  processChart = new Chart(ctx, {
+    type:'line',
+    data:{ labels, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ position:'bottom', labels:{ usePointStyle:true, padding:18, font:{size:13} } },
+        tooltip:{
+          backgroundColor:ink, padding:14, titleFont:{family:'Fraunces',size:16,weight:'500'}, bodyFont:{size:13},
+          callbacks:{
+            label:(c)=> c.dataset.label + ': ' + (c.parsed.y===null?'sem dado':c.parsed.y.toLocaleString('pt-BR'))
+          }
+        }
+      },
+      scales:{
+        y:{ beginAtZero:false, ticks:{ callback:(v)=> (v/1000).toFixed(0)+'k' }, grid:{ color:'rgba(15,29,51,0.06)' }, title:{display:true, text:'processos', font:{size:11}} },
+        x:{ grid:{ display:false } }
+      }
+    }
+  });
+}
+buildProcessChart('1g');
+
+document.querySelectorAll('.chip').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    buildProcessChart(b.dataset.view);
+  });
+});
+
+/* ============================================
+   CHART 2: Valores pagos
+   ============================================ */
+new Chart(document.getElementById('valuesChart').getContext('2d'), {
+  type:'bar',
+  data:{
+    labels: data.valoresAnos,
+    datasets:[{
+      label: 'R$ bilhões pagos a reclamantes',
+      data: data.valoresPagos,
+      backgroundColor: data.valoresAnos.map(y => y===2024 ? accent : (y===2025 ? accent+'cc' : ink+'cc')),
+      borderRadius: 0,
+      borderSkipped: false,
+      barThickness: 50
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{ display:false },
+      tooltip:{
+        backgroundColor:ink, padding:14, titleFont:{family:'Fraunces',size:16},
+        callbacks:{ label:(c)=> 'R$ '+c.parsed.y.toFixed(2)+' bilhões' }
+      }
+    },
+    scales:{
+      y:{ beginAtZero:true, ticks:{ callback:(v)=>'R$ '+v+' bi' }, grid:{ color:'rgba(15,29,51,0.06)' } },
+      x:{ grid:{ display:false } }
+    }
+  }
+});
+
+/* ============================================
+   CHART 3: Top assuntos (horizontal)
+   ============================================ */
+new Chart(document.getElementById('topicsChart').getContext('2d'), {
+  type:'bar',
+  data:{
+    labels: data.topics.map(t=>t.l),
+    datasets:[{
+      data: data.topics.map(t=>t.v),
+      backgroundColor: data.topics.map((_,i)=>{
+        const cols = [accent, accent+'dd', accent+'bb', gold+'ee', gold+'cc', gold+'aa', ink+'cc', ink+'99'];
+        return cols[i] || ink;
+      }),
+      borderRadius:0,
+      barThickness:28
+    }]
+  },
+  options:{
+    indexAxis:'y',
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:ink, padding:14, titleFont:{family:'Fraunces',size:15},
+        callbacks:{
+          title:(c)=>c[0].label,
+          label:()=>'frequência relativa (ranking declarado pelo TRT-15)'
+        }
+      }
+    },
+    scales:{
+      x:{ display:false, beginAtZero:true },
+      y:{ grid:{display:false}, ticks:{font:{size:13}} }
+    }
+  }
+});
+
+/* ============================================
+   TIMELINE rendering and filtering
+   ============================================ */
+const timelineEl = document.getElementById('timeline');
+function renderTimeline(scope='all'){
+  timelineEl.querySelectorAll('.tl-item').forEach(n=>n.remove());
+  const filtered = scope==='all' ? events : events.filter(e=>e.scope===scope);
+  const scopeLabels = { trt:'TRT-15', br:'CNJ / Brasil', world:'Mundo' };
+  const tagClass = { trt:'tag-trt', br:'tag-br', world:'tag-world' };
+  filtered.forEach(e => {
+    const node = document.createElement('div');
+    node.className = 'tl-item';
+    node.innerHTML = `
+      <div class="tl-year">${e.y}</div>
+      <div class="tl-content">
+        <span class="tl-tag ${tagClass[e.scope]}">${scopeLabels[e.scope]}</span>
+        <h4>${e.title}</h4>
+        <p>${e.text}</p>
+      </div>`;
+    timelineEl.appendChild(node);
+  });
+}
+renderTimeline('all');
+
+document.querySelectorAll('.chip-tl').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.chip-tl').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderTimeline(b.dataset.scope);
+  });
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quando a máquina pensa, quem cuida da mente? · Co.Labora 15</title>
+<meta name="description" content="Plataforma de pesquisa sobre IA generativa e saúde mental dos trabalhadores — Brasil e mundo, 2024–2026. Co.Labora 15, TRT-15." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,30&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg: #0E0D0B;
+    --bg-soft: #161410;
+    --bg-card: #1A1814;
+    --ink: #F2EBDC;
+    --ink-soft: #BFB6A4;
+    --ink-mute: #7E7666;
+    --rule: #2A2620;
+    --rule-soft: #1F1C17;
+    --accent: #E85D3F;        /* alert / risk — blood orange */
+    --accent-2: #82B19F;      /* healing / positive — sage */
+    --accent-3: #D9A84A;      /* highlight — ochre */
+    --accent-4: #6E8AB8;      /* data — slate blue */
+    --serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+    --sans: 'Geist', system-ui, -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'Menlo', monospace;
+    --max: 1280px;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-weight:400;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--accent);color:#fff}
+
+  /* —————————— GRAIN —————————— */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.35;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* —————————— NAV —————————— */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background:rgba(14,13,11,.72);
+    border-bottom:1px solid var(--rule-soft);
+  }
+  .topbar-inner{
+    max-width:var(--max);margin:0 auto;padding:14px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+  }
+  .brand{
+    display:flex;align-items:center;gap:12px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  nav.links{display:flex;gap:22px;font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.1em}
+  nav.links a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px;transition:all .2s}
+  nav.links a:hover{color:var(--ink);border-color:var(--accent)}
+  @media (max-width: 820px){ nav.links{display:none} }
+
+  /* —————————— TYPOGRAPHY —————————— */
+  h1,h2,h3,h4{font-family:var(--serif);font-weight:400;letter-spacing:-0.02em;line-height:1.05;margin:0}
+  h1{font-size: clamp(48px, 8vw, 124px); font-variation-settings:"opsz" 144, "SOFT" 30;}
+  h2{font-size: clamp(36px, 4.6vw, 64px); font-variation-settings:"opsz" 100;}
+  h3{font-size: clamp(22px, 2.2vw, 30px); font-variation-settings:"opsz" 48; line-height:1.2}
+  h4{font-size: 18px; font-family:var(--sans); font-weight:500; letter-spacing:.02em; text-transform:uppercase}
+  p{margin:0 0 1em}
+  .lede{font-family:var(--serif);font-size:clamp(20px, 2vw, 26px);line-height:1.5;color:var(--ink-soft);font-variation-settings:"opsz" 60}
+  .eyebrow{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);display:inline-flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";display:inline-block;width:24px;height:1px;background:var(--accent)}
+  .italic{font-style:italic;font-variation-settings:"opsz" 60, "SOFT" 50}
+
+  /* —————————— LAYOUT —————————— */
+  section{position:relative;padding:120px 28px;max-width:var(--max);margin:0 auto;z-index:2}
+  section + section{border-top:1px solid var(--rule-soft)}
+  .grid{display:grid;gap:32px}
+  .g-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .g-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .g-12{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
+  @media (max-width: 720px){ section{padding:80px 22px} .g-12{display:flex;flex-direction:column} }
+
+  /* —————————— HERO —————————— */
+  #hero{padding-top:180px;padding-bottom:140px}
+  .hero-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:40px;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mute)}
+  .hero-title{margin-bottom:32px;max-width:1100px}
+  .hero-title em{font-style:italic;color:var(--accent);font-variation-settings:"opsz" 144,"SOFT" 80}
+  .hero-sub{max-width:680px;margin-bottom:64px}
+  .hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .hero-stat{padding:24px 20px 24px 0;border-right:1px solid var(--rule)}
+  .hero-stat:last-child{border-right:none}
+  @media (max-width: 720px){ .hero-stat{border-right:none;border-bottom:1px solid var(--rule)} .hero-stat:last-child{border-bottom:none} }
+  .hero-stat .n{font-family:var(--serif);font-size:clamp(40px, 4.4vw, 56px);line-height:1;display:block;margin-bottom:8px;font-variation-settings:"opsz" 100}
+  .hero-stat .l{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute)}
+  .hero-stat.danger .n{color:var(--accent)}
+  .hero-stat.positive .n{color:var(--accent-2)}
+
+  /* —————————— SECTION HEADER —————————— */
+  .sec-head{display:grid;grid-template-columns:1fr 1.4fr;gap:60px;align-items:end;margin-bottom:80px}
+  @media (max-width: 820px){ .sec-head{grid-template-columns:1fr;gap:24px} }
+  .sec-head .left .eyebrow{margin-bottom:18px}
+  .sec-head .right p{color:var(--ink-soft);max-width:640px;margin:0}
+
+  /* —————————— CARDS —————————— */
+  .card{
+    background:var(--bg-card);
+    border:1px solid var(--rule);
+    border-radius:2px;
+    padding:28px;
+    transition:transform .35s ease, border-color .35s ease;
+  }
+  .card:hover{transform:translateY(-2px);border-color:var(--rule-soft)}
+  .card .num{
+    font-family:var(--serif);font-size:64px;line-height:1;display:block;margin-bottom:16px;
+    font-variation-settings:"opsz" 144;
+  }
+  .card.danger .num{color:var(--accent)}
+  .card.positive .num{color:var(--accent-2)}
+  .card.gold .num{color:var(--accent-3)}
+  .card.slate .num{color:var(--accent-4)}
+  .card .label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:8px}
+  .card .desc{font-size:14.5px;color:var(--ink-soft);line-height:1.55}
+  .card sup{font-family:var(--mono);font-size:9px;color:var(--accent);font-weight:500}
+
+  /* —————————— CHART CONTAINER —————————— */
+  .chart-wrap{
+    background:var(--bg-soft);
+    border:1px solid var(--rule);
+    padding:32px;
+    position:relative;
+    border-radius:2px;
+  }
+  .chart-wrap h3{margin-bottom:8px}
+  .chart-wrap .source{font-family:var(--mono);font-size:10.5px;color:var(--ink-mute);letter-spacing:.1em;text-transform:uppercase;margin-top:16px;border-top:1px solid var(--rule);padding-top:12px}
+  .chart-holder{position:relative;width:100%;height:380px;margin-top:24px}
+
+  /* —————————— PULL QUOTE —————————— */
+  .pull{
+    border-left:2px solid var(--accent);
+    padding:24px 0 24px 40px;
+    margin:48px 0;
+    max-width:880px;
+  }
+  .pull .q{font-family:var(--serif);font-size:clamp(24px,2.4vw,34px);line-height:1.3;color:var(--ink);font-variation-settings:"opsz" 60,"SOFT" 50;font-style:italic;margin-bottom:18px}
+  .pull .src{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mute)}
+
+  /* —————————— DUAL —————————— */
+  .dual{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+  @media (max-width: 820px){ .dual{grid-template-columns:1fr} }
+  .dual > div{padding:36px 32px;position:relative}
+  .dual .side-a{background:linear-gradient(180deg, rgba(232,93,63,.06), transparent);border-right:1px solid var(--rule)}
+  .dual .side-b{background:linear-gradient(180deg, rgba(130,177,159,.06), transparent)}
+  @media (max-width: 820px){ .dual .side-a{border-right:none;border-bottom:1px solid var(--rule)} }
+  .dual h3{margin-bottom:6px}
+  .dual .side-a h3{color:var(--accent)}
+  .dual .side-b h3{color:var(--accent-2)}
+  .dual .tag{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:24px;display:block}
+  .dual ul{margin:0;padding:0;list-style:none}
+  .dual ul li{padding:14px 0;border-bottom:1px solid var(--rule);font-size:15px;line-height:1.55;color:var(--ink-soft)}
+  .dual ul li:last-child{border-bottom:none}
+  .dual sup{font-family:var(--mono);font-size:9px;color:var(--accent);margin-left:4px}
+  .dual .side-b sup{color:var(--accent-2)}
+
+  /* —————————— STUDIES —————————— */
+  .study{
+    border-top:1px solid var(--rule);
+    padding:32px 0;
+    display:grid;
+    grid-template-columns:120px 1fr 1fr;
+    gap:32px;
+    align-items:start;
+    transition:background .3s;
+  }
+  .study:hover{background:rgba(242,235,220,.02)}
+  .study:last-child{border-bottom:1px solid var(--rule)}
+  @media (max-width: 820px){ .study{grid-template-columns:1fr;gap:12px} }
+  .study .idx{font-family:var(--serif);font-size:48px;color:var(--accent-3);font-variation-settings:"opsz" 144;line-height:1}
+  .study .meta{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:8px}
+  .study h3{margin-bottom:10px}
+  .study p{color:var(--ink-soft);font-size:14.5px;margin:0}
+  .study .doi{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:1px}
+  .study .doi:hover{color:var(--ink)}
+
+  /* —————————— RECOMMENDATIONS —————————— */
+  .rec-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+  @media (max-width: 820px){ .rec-grid{display:flex;flex-direction:column} }
+  .rec{
+    background:var(--bg-card);
+    border:1px solid var(--rule);
+    padding:28px;
+    grid-column: span 4;
+    display:flex;flex-direction:column;
+    transition:border-color .3s, transform .3s;
+  }
+  .rec:hover{border-color:var(--accent);transform:translateY(-3px)}
+  .rec.feature{grid-column: span 8;background:linear-gradient(135deg, rgba(232,93,63,.08), rgba(217,168,74,.04));border-color:rgba(232,93,63,.3)}
+  .rec .n{font-family:var(--serif);font-size:14px;color:var(--accent-3);letter-spacing:.1em;margin-bottom:14px;font-variation-settings:"opsz" 24}
+  .rec h3{font-size:24px;margin-bottom:14px}
+  .rec p{color:var(--ink-soft);font-size:14.5px;line-height:1.6;margin:0}
+
+  /* —————————— REFERENCES —————————— */
+  .refs{counter-reset:ref}
+  .ref{
+    display:grid;
+    grid-template-columns:48px 1fr;
+    gap:24px;
+    padding:18px 0;
+    border-bottom:1px solid var(--rule-soft);
+    font-size:14px;
+  }
+  .ref:last-child{border-bottom:none}
+  .ref .num{
+    font-family:var(--mono);font-size:11px;color:var(--accent);
+    counter-increment: ref;
+  }
+  .ref .num::before{content:counter(ref, decimal-leading-zero)}
+  .ref .body{color:var(--ink-soft);line-height:1.6}
+  .ref .body a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .ref .body a:hover{color:var(--accent);border-color:var(--accent)}
+  .ref .body .pub{font-style:italic;color:var(--ink-mute)}
+
+  /* —————————— FOOTER —————————— */
+  footer{padding:60px 28px;border-top:1px solid var(--rule-soft);text-align:center;background:var(--bg-soft);position:relative;z-index:2}
+  footer .mark{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:14px}
+  footer .quote{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--ink-soft);max-width:640px;margin:0 auto;font-variation-settings:"opsz" 60}
+
+  /* —————————— ANIMATIONS —————————— */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease, transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+  .stagger > * {opacity:0;transform:translateY(20px);transition:opacity .7s ease, transform .7s ease}
+  .stagger.in > *:nth-child(1){transition-delay:.05s;opacity:1;transform:none}
+  .stagger.in > *:nth-child(2){transition-delay:.15s;opacity:1;transform:none}
+  .stagger.in > *:nth-child(3){transition-delay:.25s;opacity:1;transform:none}
+  .stagger.in > *:nth-child(4){transition-delay:.35s;opacity:1;transform:none}
+  .stagger.in > *:nth-child(5){transition-delay:.45s;opacity:1;transform:none}
+  .stagger.in > *:nth-child(6){transition-delay:.55s;opacity:1;transform:none}
+
+  /* —————————— DIVIDER ORNAMENT —————————— */
+  .ornament{display:flex;align-items:center;gap:12px;margin:18px 0 32px}
+  .ornament .line{flex:1;height:1px;background:var(--rule)}
+  .ornament .glyph{font-family:var(--serif);font-style:italic;color:var(--accent-3);font-size:18px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="dot"></span> Co.Labora 15 · Pesquisa aplicada</div>
+    <nav class="links">
+      <a href="#hero">Início</a>
+      <a href="#brasil">Brasil</a>
+      <a href="#paradoxo">Paradoxo</a>
+      <a href="#global">Global</a>
+      <a href="#estudos">Estudos</a>
+      <a href="#implicacoes">Implicações</a>
+      <a href="#referencias">Referências</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ———————————————————— HERO ———————————————————— -->
+<section id="hero">
+  <div class="hero-meta">
+    <span>Edição 01 · Maio 2026</span>
+    <span>Pesquisa para o Tribunal Regional do Trabalho da 15ª Região</span>
+    <span>~12 min de leitura</span>
+  </div>
+
+  <h1 class="hero-title reveal">
+    Quando a máquina <em>pensa</em>,<br />
+    quem cuida da mente <em>humana</em>?
+  </h1>
+
+  <p class="lede hero-sub reveal">
+    Uma análise sobre os efeitos da IA generativa na saúde mental dos trabalhadores —
+    o que dizem os estudos peer-reviewed, os dados oficiais e as instituições, no Brasil e no mundo.
+  </p>
+
+  <div class="hero-stats stagger">
+    <div class="hero-stat danger">
+      <span class="n">472.328</span>
+      <span class="l">Afastamentos por saúde mental · Brasil, 2024<sup>01</sup></span>
+    </div>
+    <div class="hero-stat danger">
+      <span class="n">+68%</span>
+      <span class="l">Variação em relação a 2023<sup>01</sup></span>
+    </div>
+    <div class="hero-stat">
+      <span class="n">37 mi</span>
+      <span class="l">Trabalhadores BR em risco por IA generativa<sup>04</sup></span>
+    </div>
+    <div class="hero-stat positive">
+      <span class="n">−24%</span>
+      <span class="l">Burnout entre frontline workers que usam IA<sup>09</sup></span>
+    </div>
+  </div>
+</section>
+
+<!-- ———————————————————— BRASIL ———————————————————— -->
+<section id="brasil">
+  <div class="sec-head reveal">
+    <div class="left">
+      <span class="eyebrow">Capítulo I · Brasil</span>
+      <h2>A crise<br/><span class="italic">silenciosa</span></h2>
+    </div>
+    <div class="right">
+      <p>Em 2024 o INSS concedeu o maior número de licenças por transtornos mentais da década. A maior parte foi para mulheres com cerca de 41 anos, com diagnósticos de ansiedade e depressão. O salto ocorre justamente no ano em que a adoção corporativa de IA generativa se acelera no país.</p>
+    </div>
+  </div>
+
+  <div class="chart-wrap reveal">
+    <h3>Afastamentos por transtornos mentais no INSS</h3>
+    <p style="color:var(--ink-soft);font-size:14.5px;max-width:680px;margin:6px 0 0">Brasil, 2020–2024 — benefícios por incapacidade temporária (antigo auxílio-doença).</p>
+    <div class="chart-holder">
+      <canvas id="chartBrasil" role="img" aria-label="Gráfico de afastamentos por transtornos mentais no Brasil de 2020 a 2024. 472.328 em 2024."></canvas>
+    </div>
+    <div class="source">Fonte: Ministério da Previdência Social · Observatório SmartLab (OIT/MPT)<sup style="color:var(--accent)">01·06</sup></div>
+  </div>
+
+  <div class="grid g-3 stagger" style="margin-top:60px">
+    <div class="card danger">
+      <span class="num">64%</span>
+      <span class="label">Perfil dos afastados</span>
+      <p class="desc">Mulheres, idade média de 41 anos. Diagnósticos predominantes: ansiedade (141.414) e depressão (113.604).<sup>02</sup></p>
+    </div>
+    <div class="card gold">
+      <span class="num">R$ 3 bi</span>
+      <span class="label">Custo previdenciário estimado</span>
+      <p class="desc">Apenas com benefícios pagos em 2024, sem contabilizar perdas de produtividade ou substituição.<sup>01</sup></p>
+    </div>
+    <div class="card slate">
+      <span class="num">60%</span>
+      <span class="label">Profissionais BR preocupados com IA</span>
+      <p class="desc">Acima da média global de 52% e da América Latina (50%). Brasil lidera o ranking regional.<sup>04</sup></p>
+    </div>
+  </div>
+
+  <div class="pull reveal">
+    <p class="q">"Diante da necessidade de sobrevivência no mercado, o trabalhador coloca suas questões emocionais em segundo plano até que o corpo e a mente não suportem mais."</p>
+    <p class="src">Rayane Lima, psicóloga · via Agência Tatu<sup style="color:var(--accent)">07</sup></p>
+  </div>
+
+  <div class="chart-wrap reveal" style="margin-top:60px">
+    <h3>Diagnósticos mais frequentes (CIDs)</h3>
+    <p style="color:var(--ink-soft);font-size:14.5px;max-width:680px;margin:6px 0 0">Top 5 condições que motivaram licenças por saúde mental em 2024.</p>
+    <div class="chart-holder">
+      <canvas id="chartCID" role="img" aria-label="Diagnósticos: ansiedade 141.414, depressão 113.604, depressão recorrente 52.627, bipolar 51.314, reações ao estresse 20.873."></canvas>
+    </div>
+    <div class="source">Fonte: Dataprev · Ministério da Previdência Social<sup style="color:var(--accent)">02</sup></div>
+  </div>
+
+  <div class="ornament"><span class="line"></span><span class="glyph">§</span><span class="line"></span></div>
+
+  <h3 style="margin-bottom:14px">Marco regulatório · NR-1 e Lei 14.831</h3>
+  <p style="color:var(--ink-soft);max-width:780px">A partir de maio de 2025, a Norma Regulamentadora nº 1 obriga toda empresa brasileira a mapear, identificar e avaliar <span class="italic" style="color:var(--ink)">riscos psicossociais</span> — estresse, assédio, carga mental excessiva. A Lei 14.831/24 cria o Certificado Empresa Promotora da Saúde Mental. Pela primeira vez, a dimensão psíquica do trabalho deixa de ser opcional na gestão de SST.<sup style="color:var(--accent)">03</sup></p>
+</section>
+
+<!-- ———————————————————— PARADOXO ———————————————————— -->
+<section id="paradoxo">
+  <div class="sec-head reveal">
+    <div class="left">
+      <span class="eyebrow">Capítulo II · O paradoxo</span>
+      <h2>Faca de<br/><span class="italic">dois gumes</span></h2>
+    </div>
+    <div class="right">
+      <p>A literatura científica trata a IA generativa como fator ambivalente: simultaneamente gatilho de tecnoestresse e ferramenta terapêutica com eficácia comprovada. O determinante não é a tecnologia em si — é o desenho da implementação.</p>
+    </div>
+  </div>
+
+  <div class="dual reveal">
+    <div class="side-a">
+      <span class="tag">Fator de risco</span>
+      <h3>Quando adoece</h3>
+      <ul>
+        <li>Tecnoestresse e exaustão emocional via insegurança ocupacional (modelo JD-R)<sup>10</sup></li>
+        <li>"AI brain fry" — fadiga cognitiva por supervisão excessiva de saídas de IA<sup>13</sup></li>
+        <li>77% dos empregados dizem que a IA aumentou sua carga, em vez de aliviá-la<sup>11</sup></li>
+        <li>Casos clínicos de dependência psicológica e agravamento de sintomas em populações vulneráveis<sup>17</sup></li>
+        <li>Interferência trabalho-família e desconexão social em equipes com alta exposição<sup>10</sup></li>
+        <li>Insegurança quanto à substituição: 50% dos brasileiros adultos têm esse receio<sup>04</sup></li>
+      </ul>
+    </div>
+    <div class="side-b">
+      <span class="tag">Ferramenta terapêutica</span>
+      <h3>Quando ajuda</h3>
+      <ul>
+        <li>Meta-análise de RCTs (JMIR, 2025): chatbots gen-AI reduzem sintomas de ansiedade e depressão<sup>14</sup></li>
+        <li>Frontline workers que usam IA: 41% de burnout vs. 54% entre os que não usam (UKG, n=8.200)<sup>09</sup></li>
+        <li>Aumento de adesão a TCC online entre trabalhadores com depressão subclínica<sup>15</sup></li>
+        <li>Detecção passiva de risco de burnout via sinais fisiológicos e comportamentais<sup>16</sup></li>
+        <li>Estudo NYU/Slingshot (n=305, 2025): chatbot purpose-built reduziu depressão e ansiedade em 10 semanas<sup>18</sup></li>
+        <li>Acesso anônimo reduz estigma — especialmente em culturas com baixa procura por terapia<sup>14</sup></li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="max-width:780px;margin-top:48px;color:var(--ink-soft);font-size:16px">
+    O ponto não é decidir <span class="italic" style="color:var(--ink)">se</span> a IA generativa entra no ambiente de trabalho — ela já entrou. O ponto é como. Letramento, governança organizacional clara e participação dos trabalhadores na adoção mitigam o tecnoestresse e preservam o ganho de produtividade. A ausência dessas variáveis transforma a mesma ferramenta no oposto.
+  </p>
+</section>
+
+<!-- ———————————————————— GLOBAL ———————————————————— -->
+<section id="global">
+  <div class="sec-head reveal">
+    <div class="left">
+      <span class="eyebrow">Capítulo III · Sinais globais</span>
+      <h2>Um sintoma<br/><span class="italic">planetário</span></h2>
+    </div>
+    <div class="right">
+      <p>A crise não é uma anomalia brasileira. O custo anual estimado pela OMS e pela OIT em produtividade perdida por ansiedade e depressão chega a US$ 1 trilhão. A IA generativa redistribui pressão dentro de um sistema laboral já sob tensão estrutural.</p>
+    </div>
+  </div>
+
+  <div class="chart-wrap reveal">
+    <h3>Burnout: o efeito IA sobre frontline workers</h3>
+    <p style="color:var(--ink-soft);font-size:14.5px;max-width:680px;margin:6px 0 0">Pesquisa UKG (2025) com 8.200 trabalhadores em 10 países — EUA, Reino Unido, Canadá, Alemanha, França, Índia, México, Austrália, Nova Zelândia e Irlanda.</p>
+    <div class="chart-holder">
+      <canvas id="chartBurnout" role="img" aria-label="Trabalhadores que usam IA: 41% burnout. Não usam IA: 54%. Risco geral: 82%. Gen Z moderado/alto: 74%."></canvas>
+    </div>
+    <div class="source">Fonte: UKG Global Workforce Study · Deloitte Workforce Intelligence Report<sup style="color:var(--accent)">09·11</sup></div>
+  </div>
+
+  <div class="grid g-3 stagger" style="margin-top:60px">
+    <div class="card">
+      <span class="num">US$ 1 tri</span>
+      <span class="label">Custo global anual</span>
+      <p class="desc">Produtividade perdida por ansiedade e depressão (estimativa OMS/OIT). 12 bilhões de jornadas anuais desperdiçadas.<sup>05</sup></p>
+    </div>
+    <div class="card danger">
+      <span class="num">82%</span>
+      <span class="label">Risco de burnout</span>
+      <p class="desc">Funcionários em risco em 2025 (vs. níveis pré-pandêmicos). Pico em Gen Z: 74% com burnout moderado ou alto.<sup>13</sup></p>
+    </div>
+    <div class="card slate">
+      <span class="num">~50%</span>
+      <span class="label">Uso oculto de IA</span>
+      <p class="desc">Slack 2024: metade dos trabalhadores usa IA, parte sem informar a gestão — "shadow AI" como fator de ansiedade.<sup>12</sup></p>
+    </div>
+  </div>
+
+  <div class="pull reveal">
+    <p class="q">"A fadiga mental e a tensão cognitiva ultrapassaram o volume de trabalho como o principal preditor de burnout."</p>
+    <p class="src">Deloitte Workforce Intelligence Report · 2025<sup style="color:var(--accent)">13</sup></p>
+  </div>
+
+  <p style="max-width:780px;color:var(--ink-soft);font-size:16px">
+    Os cinco fatores clássicos de tecnoestresse — sobrecarga, invasão, complexidade, insegurança e incerteza — descritos por Ragu-Nathan, estão todos potencializados pela velocidade de evolução da IA generativa. A diferença em relação a ondas tecnológicas anteriores é o ritmo: o trabalhador precisa reaprender o próprio ofício a cada poucos meses.
+  </p>
+</section>
+
+<!-- ———————————————————— ESTUDOS ———————————————————— -->
+<section id="estudos">
+  <div class="sec-head reveal">
+    <div class="left">
+      <span class="eyebrow">Capítulo IV · Evidências</span>
+      <h2>Seis estudos<br/><span class="italic">para sustentar</span></h2>
+    </div>
+    <div class="right">
+      <p>A base empírica desta análise — revisões sistemáticas, meta-análises e estudos transversais publicados entre 2024 e 2026 em periódicos peer-reviewed indexados em Nature, JMIR, Frontiers e PubMed Central.</p>
+    </div>
+  </div>
+
+  <div class="studies">
+    <div class="study reveal">
+      <span class="idx">01</span>
+      <div>
+        <div class="meta">Frontiers in Psychology · 2025 · Romênia</div>
+        <h3>Mental health in the era of AI: technostress and SEM analysis</h3>
+        <p>Lițan. Modelagem por equações estruturais (SEM) confirma associação significativa entre tecnoestresse gerado por IA e sintomas de ansiedade e depressão na população adulta.</p>
+        <a class="doi" href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2025.1600013/full" target="_blank">DOI: 10.3389/fpsyg.2025.1600013 →</a>
+      </div>
+      <div>
+        <p style="color:var(--ink-mute);font-size:13.5px;line-height:1.5">Por que importa: primeiro modelo SEM dedicado ao tecnoestresse <span class="italic">específico</span> da IA — separa o efeito da ferramenta de outras pressões organizacionais.</p>
+      </div>
+    </div>
+
+    <div class="study reveal">
+      <span class="idx">02</span>
+      <div>
+        <div class="meta">JMIR · Dez/2025 · Meta-análise</div>
+        <h3>Generative AI Mental Health Chatbots: Systematic Review and Meta-Analysis</h3>
+        <p>Zhang et al. Revisão de 5.555 registros e meta-análise apenas de RCTs. Demonstra efeitos significativos de chatbots gen-AI sobre ansiedade e depressão, com moderadores claros: duração, design híbrido e supervisão clínica.</p>
+        <a class="doi" href="https://www.jmir.org/2025/1/e78238" target="_blank">DOI: 10.2196/78238 →</a>
+      </div>
+      <div>
+        <p style="color:var(--ink-mute);font-size:13.5px;line-height:1.5">Por que importa: padrão-ouro metodológico. A primeira meta-análise restrita a ensaios randomizados em chatbots <span class="italic">generativos</span>, não rule-based.</p>
+      </div>
+    </div>
+
+    <div class="study reveal">
+      <span class="idx">03</span>
+      <div>
+        <div class="meta">PMC · 2025 · Mediação serial</div>
+        <h3>AI Awareness and Emotional Exhaustion</h3>
+        <p>Conscientização sobre IA → insegurança ocupacional → interferência trabalho-família → exaustão emocional. Validação empírica do modelo Job Demands–Resources (JD-R) aplicado ao contexto IA.</p>
+        <a class="doi" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12024253/" target="_blank">PMC12024253 →</a>
+      </div>
+      <div>
+        <p style="color:var(--ink-mute);font-size:13.5px;line-height:1.5">Por que importa: identifica o caminho causal. A IA não causa exaustão diretamente — causa por mediação de insegurança e transbordamento doméstico.</p>
+      </div>
+    </div>
+
+    <div class="study reveal">
+      <span class="idx">04</span>
+      <div>
+        <div class="meta">PMC · Nov/2025 · Revisão</div>
+        <h3>Passive AI Detection of Stress and Burnout in Frontline Workers</h3>
+        <p>Revisão metodológica 2020–2025 sobre uso de IA para monitoramento contínuo e não-invasivo de risco de burnout em saúde, educação e serviços de emergência. Cobre sinais fisiológicos e comportamentais.</p>
+        <a class="doi" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12655262/" target="_blank">PMC12655262 →</a>
+      </div>
+      <div>
+        <p style="color:var(--ink-mute);font-size:13.5px;line-height:1.5">Por que importa: aponta uma fronteira ética — quem detecta o burnout pelos dados também pode vigiar. Alerta sobre vieses culturais em modelos treinados em populações ocidentais.</p>
+      </div>
+    </div>
+
+    <div class="study reveal">
+      <span class="idx">05</span>
+      <div>
+        <div class="meta">International Journal of Information Management · 2025</div>
+        <h3>JD-R Model: AI's dual impact on work and life well-being</h3>
+        <p>Painel longitudinal de 600 trabalhadores em 3 ondas, balanço de gênero. Resultado central: a IA generativa <span class="italic">mitiga</span> os efeitos negativos do tecnoestresse, condicionado à autoeficácia em IA do trabalhador.</p>
+        <a class="doi" href="https://www.sciencedirect.com/science/article/pii/S0268401225000192" target="_blank">DOI: 10.1016/j.ijinfomgt.2025.102887 →</a>
+      </div>
+      <div>
+        <p style="color:var(--ink-mute);font-size:13.5px;line-height:1.5">Por que importa: prova empírica de que letramento em IA não é só treinamento técnico — é fator protetivo de saúde mental.</p>
+      </div>
+    </div>
+
+    <div class="study reveal">
+      <span class="idx">06</span>
+      <div>
+        <div class="meta">Contribuciones a las Ciencias Sociales · 2024 · Brasil</div>
+        <h3>Inteligência Artificial e saúde mental no Brasil: revisão sistemática</h3>
+        <p>Protocolo PRISMA aplicado à base SciELO. Aponta potencial de IA para preencher lacunas na Atenção Primária à Saúde brasileira; alerta para vieses algorítmicos, consentimento e segurança do paciente.</p>
+        <a class="doi" href="https://ojs.revistacontribuciones.com/ojs/index.php/clcs/article/view/7935" target="_blank">CLCS 7935 →</a>
+      </div>
+      <div>
+        <p style="color:var(--ink-mute);font-size:13.5px;line-height:1.5">Por que importa: única revisão sistemática centrada no contexto brasileiro. Endereça desigualdades regionais que o TRT-15 já enfrenta na sua jurisdição.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ———————————————————— IMPLICAÇÕES ———————————————————— -->
+<section id="implicacoes">
+  <div class="sec-head reveal">
+    <div class="left">
+      <span class="eyebrow">Capítulo V · Co.Labora 15</span>
+      <h2>Cinco frentes<br/><span class="italic">acionáveis</span></h2>
+    </div>
+    <div class="right">
+      <p>O TRT-15 ocupa uma posição rara: adota IA generativa internamente (Jurisdata Science + Falcão, Exe-PJe, Chat JT + PJe) e ao mesmo tempo julga seus efeitos sobre relações de trabalho. O laboratório pode transformar essa dupla exposição em vantagem analítica.</p>
+    </div>
+  </div>
+
+  <div class="rec-grid reveal">
+    <div class="rec feature">
+      <span class="n">— 01</span>
+      <h3>Letramento em IA como política de saúde ocupacional</h3>
+      <p>O estudo JD-R (#05) demonstra que autoeficácia em IA é fator <span class="italic">protetivo</span>, não apenas vetor de produtividade. Integrar trilhas estruturadas na Ejud-15 — para magistrados, servidores e estagiários — reduz a insegurança ocupacional medida pelos instrumentos do JD-R model. Sugestão: incorporar ao Plano Intraorganizacional de Gestão de Pessoas (2023–2026).</p>
+    </div>
+    <div class="rec">
+      <span class="n">— 02</span>
+      <h3>Governança transparente da IA jurisdicional</h3>
+      <p>Tornar pública, via Diálogos Inovadores, a forma como a IA é usada em triagem, minutas e pesquisa. Estudos #03 e #04 mostram que opacidade é um gatilho específico de tecnoestresse.</p>
+    </div>
+    <div class="rec">
+      <span class="n">— 03</span>
+      <h3>Jurisdata Science aplicado à NR-1</h3>
+      <p>A obrigação legal de avaliar riscos psicossociais cria demanda inédita por jurisprudência. Indexar acórdãos sobre riscos psicossociais e IA generativa antecipa o tribunal à curva.</p>
+    </div>
+    <div class="rec">
+      <span class="n">— 04</span>
+      <h3>Sentinela interna de carga cognitiva</h3>
+      <p>Pesquisa de clima específica sobre "AI brain fry" entre quem opera Chat JT + PJe, Corisco e Jurisdata. Formato Dicas Inovadoras em 70 Minutos para boas práticas de uso saudável.</p>
+    </div>
+    <div class="rec">
+      <span class="n">— 05</span>
+      <h3>Linguagem Simples como saúde mental do jurisdicionado</h3>
+      <p>Estresse processual é fator psicossocial reconhecido. Expandir Legalmente Simples e Balcão Visual reduz sofrimento de quem litiga — saúde mental no acesso à justiça, não só no fim do processo.</p>
+    </div>
+    <div class="rec" style="grid-column: span 4">
+      <span class="n">— método</span>
+      <h3>Princípio transversal</h3>
+      <p>Toda nova ferramenta de IA introduzida no tribunal deveria passar por um <span class="italic">checkpoint</span> de saúde ocupacional: como afeta carga cognitiva, quem participou do desenho, qual o plano de letramento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ———————————————————— REFERÊNCIAS ———————————————————— -->
+<section id="referencias">
+  <div class="sec-head reveal">
+    <div class="left">
+      <span class="eyebrow">Apêndice · Fontes</span>
+      <h2>Referências</h2>
+    </div>
+    <div class="right">
+      <p>Todas as fontes consultadas para esta análise. Os números no corpo do texto correspondem aos itens desta lista.</p>
+    </div>
+  </div>
+
+  <div class="refs">
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">G1 / Ministério da Previdência Social</span>. Afastamentos por saúde mental cresceram 68% em 2024. Mar/2025. <a href="https://www.contabeis.com.br/noticias/69787/afastamentos-por-saude-mental-cresceram-68-em-2024" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">Brasil 61</span>. Afastamento do trabalho por transtornos mentais ultrapassou 400 mil em 2024. Fev/2025. <a href="https://brasil61.com/n/afastamento-do-trabalho-por-transtornos-mentais-ultrapassaram-400-mil-em-2024-bras2513458" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">TST</span>. Atenção à saúde mental cobra novas práticas de gestão. Abr/2025. <a href="https://www.tst.jus.br/en/-/aten%C3%A7%C3%A3o-%C3%A0-sa%C3%BAde-mental-cobra-novas-pr%C3%A1ticas-de-gest%C3%A3o-e-combate-a-ambientes-de-trabalho-t%C3%B3xicos" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">Hospital Santa Mônica / Michael Page / Ipsos / OIT</span>. Medo de ser substituído por IA e suas consequências na saúde mental. Ago/2025. <a href="https://hospitalsantamonica.com.br/medo-de-ser-substituido-por-ia-no-mercado-de-trabalho-e-suas-consequencias-na-saude-mental/" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">IT Forum / OMS / OIT</span>. Saúde mental no trabalho na era da IA. Fev/2026. <a href="https://itforum.com.br/noticias/saude-mental-ia/" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">ONU Brasil / SmartLab / OIT / MPT</span>. Brasil: afastamentos por problemas de saúde mental aumentam 134%. Abr/2025. <a href="https://brasil.un.org/pt-br/292926-brasil-afastamentos-por-problemas-de-sa%C3%BAde-mental-aumentam-134" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">Agência Tatu</span>. Adoecimento mental afastou mais de 470 mil trabalhadores em 2024. Out/2025. <a href="https://www.agenciatatu.com.br/noticia/adoecimento-mental-afastou-trabalhadores-em-2024/" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">Jornal da USP</span>. Afastamento do trabalho por transtornos mentais cresce 68%. Abr/2025. <a href="https://jornal.usp.br/campus-ribeirao-preto/afastamento-do-trabalho-por-transtornos-mentais-cresce-68-no-brasil/" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">UKG Global Workforce Study</span>. Frontline Workers Who Use AI the Most Are Burned Out the Least. Out/2025. <a href="https://www.ukg.com/company/newsroom/frontline-workers-who-use-ai-most-are-burned-out-least" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">PMC / Frontiers</span>. Association Between AI Awareness and Emotional Exhaustion. 2025. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12024253/" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">The Interview Guys (síntese McKinsey / Deloitte / Gallup / SHRM)</span>. The State of Workplace Burnout in 2025. Mai/2025. <a href="https://blog.theinterviewguys.com/workplace-burnout-in-2025-research-report/" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">No Jitter / Slack / Unily / Upwork</span>. AI Adoption Anxiety Ushers in the New Year. Fev/2025. <a href="https://www.nojitter.com/digital-workplace/ai-adoption-anxiety-ushers-in-the-new-year" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">Bradley Hook / Deloitte Workforce Intelligence Report / Harvard Business Review</span>. AI Burnout: Why Artificial Intelligence May Be Increasing Workplace Stress. Mar/2026. <a href="https://bradleyhook.com/ai-burnout-why-artificial-intelligence-may-be-increasing-workplace-stress/" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body">Zhang Q, Zhang R, Xiong Y, et al. <span class="pub">Generative AI Mental Health Chatbots as Therapeutic Tools: Systematic Review and Meta-Analysis</span>. JMIR. Dez/2025. <a href="https://www.jmir.org/2025/1/e78238" target="_blank">DOI 10.2196/78238 →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body">Yasukawa S, Tanaka T, Yamane K, et al. <span class="pub">A chatbot to improve adherence to internet-based CBT among workers with subthreshold depression: a randomised controlled trial</span>. BMJ Ment Health. 2024. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12440320/" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">PMC / MDPI</span>. Passive AI Detection of Stress and Burnout Among Frontline Workers. Nov/2025. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12655262/" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">Mental Health Journal</span>. Minds in Crisis: How the AI Revolution is Impacting Mental Health. Set/2025. <a href="https://www.mentalhealthjournal.org/articles/minds-in-crisis-how-the-ai-revolution-is-impacting-mental-health.html" target="_blank">link →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body">Hull TD, Zhang L, Arean PA, Malgaroli M. <span class="pub">Mental Health Generative AI is Safe, Promotes Social Health, and Reduces Depression and Anxiety</span>. NYU / Slingshot AI. 2025. <a href="https://arxiv.org/pdf/2511.11689" target="_blank">arXiv:2511.11689 →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">Frontiers in Psychology</span>. Mental health in the era of AI: technostress and SEM analysis. Mai/2025. <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2025.1600013/full" target="_blank">DOI 10.3389/fpsyg.2025.1600013 →</a></div></div>
+    <div class="ref"><span class="num"></span><div class="body"><span class="pub">Contribuciones a las Ciencias Sociales</span>. Inteligência Artificial e saúde mental no Brasil: uma revisão sistemática. 2024. <a href="https://ojs.revistacontribuciones.com/ojs/index.php/clcs/article/view/7935" target="_blank">link →</a></div></div>
+  </div>
+</section>
+
+<footer>
+  <p class="mark">Co.Labora 15 · TRT da 15ª Região</p>
+  <p class="quote">"Transformar ideias corajosas em caminhos para a paz social."</p>
+  <p style="font-family:var(--mono);font-size:10.5px;color:var(--ink-mute);letter-spacing:.12em;text-transform:uppercase;margin-top:32px">Pesquisa elaborada para o Co.Labora 15 · Maio 2026</p>
+</footer>
+
+<script>
+// ============== REVEAL ANIMATIONS ==============
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+document.querySelectorAll('.reveal, .stagger').forEach(el => io.observe(el));
+
+// ============== CHART DEFAULTS ==============
+Chart.defaults.color = '#BFB6A4';
+Chart.defaults.font.family = "'Geist', system-ui, sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.borderColor = 'rgba(242,235,220,0.06)';
+
+const fmtBR = (n) => Math.round(n).toLocaleString('pt-BR');
+
+// ============== CHART 1 — Brasil time series ==============
+const buildBrasilChart = () => {
+  const ctx = document.getElementById('chartBrasil');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['2020','2021','2022','2023','2024'],
+      datasets: [{
+        data: [289000, 200000, 209000, 283471, 472328],
+        backgroundColor: (c) => c.dataIndex === 4 ? '#E85D3F' : 'rgba(110,138,184,.55)',
+        borderColor: (c) => c.dataIndex === 4 ? '#E85D3F' : 'rgba(110,138,184,1)',
+        borderWidth: 1,
+        borderRadius: 0,
+        barPercentage: 0.6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1A1814', borderColor: '#2A2620', borderWidth: 1, padding: 12,
+          titleFont: { family: "'JetBrains Mono', monospace", size: 10, weight: 500 },
+          bodyFont: { family: "'Geist', sans-serif", size: 13 },
+          callbacks: { label: (c) => fmtBR(c.parsed.y) + ' afastamentos' }
+        }
+      },
+      scales: {
+        y: {
+          ticks: { callback: (v) => (v/1000) + 'k', font: { size: 11 } },
+          grid: { color: 'rgba(242,235,220,0.05)' },
+          border: { display: false }
+        },
+        x: {
+          ticks: { font: { family: "'JetBrains Mono', monospace", size: 12 } },
+          grid: { display: false },
+          border: { color: '#2A2620' }
+        }
+      }
+    }
+  });
+};
+
+// ============== CHART 2 — CID breakdown ==============
+const buildCIDChart = () => {
+  const ctx = document.getElementById('chartCID');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Outros transtornos ansiosos', 'Episódios depressivos', 'Depressão recorrente', 'Transtorno bipolar', 'Reações ao estresse'],
+      datasets: [{
+        data: [141414, 113604, 52627, 51314, 20873],
+        backgroundColor: ['#E85D3F','#D9A84A','#82B19F','#6E8AB8','#7E7666'],
+        borderRadius: 0,
+        barPercentage: 0.7
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1A1814', borderColor: '#2A2620', borderWidth: 1, padding: 12,
+          titleFont: { family: "'JetBrains Mono', monospace", size: 10 },
+          bodyFont: { family: "'Geist', sans-serif", size: 13 },
+          callbacks: { label: (c) => fmtBR(c.parsed.x) + ' benefícios' }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { callback: (v) => (v/1000) + 'k', font: { size: 11 } },
+          grid: { color: 'rgba(242,235,220,0.05)' },
+          border: { display: false }
+        },
+        y: {
+          ticks: { font: { size: 12.5 }, color: '#F2EBDC' },
+          grid: { display: false },
+          border: { color: '#2A2620' }
+        }
+      }
+    }
+  });
+};
+
+// ============== CHART 3 — Global burnout ==============
+const buildBurnoutChart = () => {
+  const ctx = document.getElementById('chartBurnout');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Frontline que usa IA', 'Frontline sem IA', 'Risco geral (todos)', 'Gen Z (mod./alto)'],
+      datasets: [{
+        data: [41, 54, 82, 74],
+        backgroundColor: ['#82B19F','#E85D3F','#7E7666','#D9A84A'],
+        borderRadius: 0,
+        barPercentage: 0.65
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1A1814', borderColor: '#2A2620', borderWidth: 1, padding: 12,
+          titleFont: { family: "'JetBrains Mono', monospace", size: 10 },
+          bodyFont: { family: "'Geist', sans-serif", size: 13 },
+          callbacks: { label: (c) => c.parsed.x + '% reportam burnout' }
+        }
+      },
+      scales: {
+        x: {
+          max: 100,
+          ticks: { callback: (v) => v + '%', font: { size: 11 } },
+          grid: { color: 'rgba(242,235,220,0.05)' },
+          border: { display: false }
+        },
+        y: {
+          ticks: { font: { size: 12.5 }, color: '#F2EBDC' },
+          grid: { display: false },
+          border: { color: '#2A2620' }
+        }
+      }
+    }
+  });
+};
+
+// Build charts after the script tag executes (Chart.js is loaded synchronously via CDN before this).
+window.addEventListener('load', () => {
+  buildBrasilChart();
+  buildCIDChart();
+  buildBurnoutChart();
+});
+</script>
+
+</body>
+</html>

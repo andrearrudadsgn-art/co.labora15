@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Benchmark Global · co.labora 15 · Justiça do Trabalho 4.0</title>
+<meta name="description" content="Inventário verificado de inovações judiciárias no mundo — estrutura PESTEL, mapa interativo e cases para os próximos 15 anos do co.labora 15 / TRT-15." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/geist-font@1.0.0/dist/geist.css" rel="stylesheet">
+<style>
+  :root{
+    /* warm off-black palette */
+    --bg:        #0E0D0B;
+    --bg-soft:   #161410;
+    --bg-card:   #1A1814;
+    --bg-elev:   #221E17;
+    --line:      #2B2620;
+    --line-soft: #211D17;
+
+    --ink:       #F2EBDC;
+    --ink-soft:  #C9BFA8;
+    --ink-mute:  #8A8273;
+    --ink-deep:  #5A5447;
+
+    --accent:    #E85D3F;   /* blood orange — Brasil/destaque */
+    --accent-2:  #82B19F;   /* sage — sustentável/social */
+    --accent-3:  #D9A84A;   /* ochre — econômico */
+    --accent-4:  #6E8AB8;   /* slate blue — político/legal */
+    --accent-5:  #B57BAE;   /* mauve — ético/legal */
+    --accent-6:  #7FA4D9;   /* sky — IA/tech */
+
+    --land:      #1F1B14;
+    --land-h:    #2D261C;
+    --land-sel:  #3A3022;
+    --water:     #0E0D0B;
+    --border-c:  rgba(242,235,220,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Geist',-apple-system,BlinkMacSystemFont,sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* ===== FILM GRAIN ===== */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:.18;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ===== TYPOGRAPHY ===== */
+  .serif{font-family:'Fraunces',Georgia,serif;font-variation-settings:"SOFT" 50}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-feature-settings:"ss01","ss02"}
+
+  h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-.02em;line-height:1.05}
+  h1{font-size:clamp(2.6rem,7vw,5.4rem)}
+  h2{font-size:clamp(2rem,4.5vw,3.4rem)}
+  h3{font-size:clamp(1.3rem,2.2vw,1.7rem)}
+  em{font-style:italic;color:var(--accent)}
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--ink-mute);
+    font-weight:500;
+  }
+  .lead{font-size:clamp(1.05rem,1.5vw,1.25rem);color:var(--ink-soft);line-height:1.55;max-width:62ch}
+
+  a{color:inherit}
+
+  /* ===== TOP NAV ===== */
+  nav.top{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(14,13,11,.85);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border-c);
+  }
+  .nav-inner{
+    max-width:1480px;margin:0 auto;padding:14px 28px;
+    display:flex;justify-content:space-between;align-items:center;gap:24px;
+  }
+  .nav-brand{display:flex;align-items:baseline;gap:12px}
+  .nav-brand .logo{font-family:'Fraunces',serif;font-size:18px;font-weight:400;letter-spacing:-.01em}
+  .nav-brand .logo em{font-style:italic;color:var(--accent);font-weight:300}
+  .nav-brand .sep{color:var(--ink-deep);font-family:'JetBrains Mono',monospace;font-size:11px}
+  .nav-brand .sub{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute)}
+  .nav-links{display:flex;gap:24px;align-items:center}
+  .nav-links a{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    text-decoration:none;color:var(--ink-mute);transition:color .15s;
+    position:relative;padding:6px 2px;
+  }
+  .nav-links a:hover{color:var(--ink)}
+  .nav-links a::after{
+    content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--accent);
+    transform:scaleX(0);transform-origin:left;transition:transform .25s;
+  }
+  .nav-links a:hover::after{transform:scaleX(1)}
+  @media (max-width:740px){.nav-links{display:none}}
+
+  /* ===== LAYOUT ===== */
+  main{padding-top:60px}
+  section{max-width:1480px;margin:0 auto;padding:120px 28px}
+  section.tight{padding-top:60px;padding-bottom:60px}
+  @media (max-width:768px){section{padding:80px 20px}}
+
+  .section-head{
+    display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:end;
+    margin-bottom:60px;padding-bottom:24px;border-bottom:1px solid var(--border-c);
+  }
+  @media (max-width:768px){.section-head{grid-template-columns:1fr;gap:14px}}
+  .section-head .num{
+    font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.15em;color:var(--accent);
+  }
+  .section-head .h-text h2{margin-top:8px}
+  .section-head .h-text p{margin-top:16px;max-width:60ch;color:var(--ink-soft);font-size:1rem}
+
+  /* ===== HERO ===== */
+  .hero{
+    min-height:80vh;display:flex;flex-direction:column;justify-content:flex-end;
+    position:relative;padding-bottom:80px;
+  }
+  .hero-meta{display:flex;gap:32px;flex-wrap:wrap;margin-bottom:42px;align-items:baseline}
+  .hero-meta .item{display:flex;flex-direction:column;gap:6px}
+  .hero-meta .k{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute)}
+  .hero-meta .v{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:400;color:var(--ink);font-style:italic}
+  .hero-title{font-size:clamp(3rem,9vw,7.5rem);font-weight:300;line-height:.97;letter-spacing:-.035em;max-width:18ch}
+  .hero-title .accent-word{
+    font-style:italic;color:var(--accent);font-weight:400;
+    font-variation-settings:"SOFT" 100;
+  }
+  .hero-sub{margin-top:32px;color:var(--ink-soft);font-size:clamp(1.1rem,1.6vw,1.35rem);max-width:55ch;line-height:1.5}
+  .hero-cta{display:flex;gap:14px;margin-top:42px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 22px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+    text-decoration:none;cursor:pointer;border:none;
+    transition:all .2s;
+  }
+  .btn-primary{background:var(--accent);color:var(--bg)}
+  .btn-primary:hover{background:var(--ink);color:var(--bg)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--ink-deep)}
+  .btn-ghost:hover{border-color:var(--ink);background:rgba(242,235,220,.04)}
+  .btn .arrow{transition:transform .2s}
+  .btn:hover .arrow{transform:translate(3px,-3px)}
+
+  /* big decorative number ticker */
+  .hero-ticker{
+    position:absolute;top:80px;right:28px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--ink-mute);letter-spacing:.15em;text-align:right;line-height:1.7;
+  }
+  .hero-ticker .blink{color:var(--accent);animation:blink 1.4s infinite}
+  @keyframes blink{50%{opacity:.3}}
+  @media (max-width:768px){.hero-ticker{position:static;text-align:left;margin-top:30px}}
+
+  /* ===== STATS CHARTS SECTION ===== */
+  .charts-grid{
+    display:grid;
+    grid-template-columns:1.2fr 1fr 1fr;
+    gap:1px;background:var(--border-c);
+    border:1px solid var(--border-c);
+  }
+  @media (max-width:1100px){.charts-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:680px){.charts-grid{grid-template-columns:1fr}}
+  .chart-cell{
+    background:var(--bg-card);padding:32px;
+    display:flex;flex-direction:column;gap:20px;
+    min-height:340px;
+  }
+  .chart-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .chart-head h3{font-size:1.4rem;letter-spacing:-.015em}
+  .chart-head .tag{
+    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-mute);
+    padding:4px 8px;border:1px solid var(--line);
+  }
+  .chart-cell p.note{font-size:.85rem;color:var(--ink-mute);line-height:1.5;font-family:'Geist',sans-serif}
+  .chart-wrap{position:relative;flex:1;min-height:200px;width:100%}
+
+  /* ===== MAP SECTION ===== */
+  .map-container{
+    background:var(--bg-soft);
+    border:1px solid var(--border-c);
+    display:grid;
+    grid-template-columns:1fr 420px;
+    min-height:680px;
+    position:relative;
+  }
+  @media (max-width:1100px){.map-container{grid-template-columns:1fr 360px;min-height:600px}}
+  @media (max-width:860px){.map-container{grid-template-columns:1fr;min-height:auto}}
+
+  .map-left{display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+  .filters{
+    padding:18px 24px;
+    border-bottom:1px solid var(--border-c);
+    background:var(--bg-card);
+  }
+  .filter-label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-mute);margin-right:8px;
+  }
+  .filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .chip{
+    background:transparent;border:1px solid var(--line);
+    padding:6px 11px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-mute);cursor:pointer;transition:all .15s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .chip:hover{border-color:var(--ink-mute);color:var(--ink-soft)}
+  .chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+  .chip.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .chip.active .dot{background:var(--accent)}
+  .chip-clear{
+    background:transparent;border:none;
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:var(--accent);cursor:pointer;letter-spacing:.1em;text-transform:uppercase;
+    padding:6px 4px;text-decoration:underline;text-underline-offset:3px;
+  }
+  .search{
+    background:var(--bg);border:1px solid var(--line);
+    padding:7px 12px;font-family:'Geist',sans-serif;font-size:12px;
+    color:var(--ink);outline:none;width:200px;
+  }
+  .search::placeholder{color:var(--ink-mute)}
+  .search:focus{border-color:var(--accent)}
+
+  .map-stage{flex:1;position:relative;overflow:hidden;background:var(--bg-soft)}
+  #worldmap{width:100%;height:100%;display:block;cursor:grab;min-height:540px}
+  #worldmap.grabbing{cursor:grabbing}
+  .country{
+    fill:var(--land);stroke:var(--line);stroke-width:.4;
+    transition:fill .15s;
+  }
+  .country.has-data{fill:var(--land-h);cursor:pointer}
+  .country.has-data:hover{fill:var(--land-sel)}
+  .country.selected{fill:var(--accent);fill-opacity:.15;stroke:var(--accent);stroke-width:.8}
+
+  .marker{cursor:pointer}
+  .marker circle.outer{fill:var(--accent);fill-opacity:.18;stroke:none}
+  .marker circle.core{
+    fill:var(--accent);stroke:var(--bg);stroke-width:1.5;
+    transition:transform .15s, fill .15s;
+    transform-origin:center;transform-box:fill-box;
+  }
+  .marker:hover circle.core{transform:scale(1.25);fill:var(--ink)}
+  .marker.selected circle.core{fill:var(--ink);stroke:var(--accent);stroke-width:2}
+  .marker text.count{
+    fill:var(--bg);text-anchor:middle;dominant-baseline:central;
+    font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;
+    pointer-events:none;
+  }
+
+  .map-tooltip{
+    position:absolute;pointer-events:none;z-index:10;
+    background:var(--ink);color:var(--bg);
+    padding:10px 14px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.05em;
+    transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;
+    opacity:0;transition:opacity .12s;line-height:1.5;
+  }
+  .map-tooltip.show{opacity:1}
+  .map-tooltip strong{font-family:'Fraunces',serif;font-style:italic;font-size:14px;display:block;letter-spacing:0;margin-bottom:3px;font-weight:500}
+  .map-tooltip::after{
+    content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);
+    width:0;height:0;border:5px solid transparent;border-top-color:var(--ink);border-bottom:0;
+  }
+
+  .map-hint{
+    position:absolute;bottom:14px;left:18px;right:18px;
+    display:flex;justify-content:space-between;align-items:flex-end;gap:20px;pointer-events:none;
+  }
+  .map-hint .hint-text{
+    font-family:'Fraunces',serif;font-style:italic;font-size:13px;color:var(--ink-mute);
+    max-width:38ch;line-height:1.4;
+  }
+  .map-hint .zoom-ctrl{pointer-events:auto;display:flex;gap:4px}
+  .zoom-btn{
+    background:var(--bg-card);border:1px solid var(--line);color:var(--ink-soft);
+    width:30px;height:30px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:14px;
+    display:flex;align-items:center;justify-content:center;transition:all .15s;
+  }
+  .zoom-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* SIDE PANEL */
+  .map-right{
+    border-left:1px solid var(--border-c);
+    background:var(--bg-card);
+    display:flex;flex-direction:column;
+    overflow:hidden;
+  }
+  @media (max-width:860px){.map-right{border-left:none;border-top:1px solid var(--border-c)}}
+
+  .panel-head{
+    padding:24px;border-bottom:1px solid var(--border-c);background:var(--bg-card);
+    position:sticky;top:0;z-index:3;
+  }
+  .panel-head .eyebrow{display:block;margin-bottom:10px;color:var(--accent)}
+  .panel-head h3{font-size:1.6rem;line-height:1.05}
+  .panel-head p{margin-top:8px;font-size:13px;color:var(--ink-soft);line-height:1.5}
+
+  .panel-body{overflow-y:auto;padding:16px 20px 40px;flex:1;max-height:560px}
+  @media (max-width:860px){.panel-body{max-height:none}}
+  .panel-body::-webkit-scrollbar{width:6px}
+  .panel-body::-webkit-scrollbar-track{background:transparent}
+  .panel-body::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+
+  .ini-card{
+    display:block;text-decoration:none;color:inherit;
+    background:var(--bg-elev);border:1px solid var(--line);
+    padding:18px 18px 16px;margin-bottom:10px;
+    transition:all .2s;position:relative;
+  }
+  .ini-card:hover{
+    border-color:var(--accent);
+    transform:translateX(-2px);
+    box-shadow:-3px 3px 0 var(--accent);
+  }
+  .ini-card .ext{
+    position:absolute;top:14px;right:14px;color:var(--ink-mute);
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    transition:color .2s;
+  }
+  .ini-card:hover .ext{color:var(--accent)}
+  .ini-meta{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute)}
+  .ini-meta .flag{font-size:13px}
+  .ini-meta .year{color:var(--accent-3)}
+  .ini-card h4{
+    font-family:'Fraunces',serif;font-weight:500;font-size:1.05rem;line-height:1.2;
+    margin:2px 36px 8px 0;color:var(--ink);letter-spacing:-.01em;
+  }
+  .ini-card p{font-size:12.5px;line-height:1.5;color:var(--ink-soft);margin-bottom:10px}
+  .ini-tags{display:flex;gap:4px;flex-wrap:wrap}
+  .ini-tag{
+    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;
+    text-transform:uppercase;padding:2px 7px;
+    border:1px solid;display:inline-flex;align-items:center;gap:4px;
+  }
+  .ini-tag::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+
+  /* Category colors */
+  .cat-P{color:var(--accent-4)}
+  .cat-E{color:var(--accent-3)}
+  .cat-S{color:var(--accent-2)}
+  .cat-T{color:var(--accent-6)}
+  .cat-A{color:var(--accent)}
+  .cat-V{color:#9ABF8C}
+  .cat-L{color:var(--accent-5)}
+
+  .empty{padding:40px 20px;text-align:center;color:var(--ink-mute);font-family:'Fraunces',serif;font-style:italic;font-size:15px}
+  .empty .big{font-size:36px;color:var(--accent);display:block;margin-bottom:12px;line-height:1;font-style:normal}
+
+  /* ===== INDEX SECTION (full list) ===== */
+  .index-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1px;
+    background:var(--border-c);border:1px solid var(--border-c);
+  }
+  .idx-card{
+    background:var(--bg-card);padding:24px;
+    display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;
+    transition:background .15s;cursor:pointer;position:relative;min-height:200px;
+  }
+  .idx-card:hover{background:var(--bg-elev)}
+  .idx-card:hover h4{color:var(--accent)}
+  .idx-card .ext{position:absolute;top:18px;right:18px;color:var(--ink-mute);font-family:'JetBrains Mono',monospace;font-size:13px}
+  .idx-card:hover .ext{color:var(--accent)}
+  .idx-card .meta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);display:flex;align-items:baseline;gap:8px}
+  .idx-card .meta .year{color:var(--accent-3)}
+  .idx-card h4{font-family:'Fraunces',serif;font-weight:500;font-size:1.15rem;line-height:1.2;letter-spacing:-.01em;transition:color .15s;margin-right:24px}
+  .idx-card p{font-size:13px;line-height:1.55;color:var(--ink-soft);flex:1}
+  .idx-card .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+
+  /* ===== INSIGHTS SECTION ===== */
+  .insights{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border-c);border:1px solid var(--border-c)}
+  @media (max-width:768px){.insights{grid-template-columns:1fr}}
+  .insight-card{background:var(--bg-card);padding:36px;display:flex;flex-direction:column;gap:14px}
+  .insight-card .num{font-family:'Fraunces',serif;font-style:italic;font-size:4rem;line-height:.9;color:var(--accent);font-weight:300}
+  .insight-card h3{font-size:1.5rem}
+  .insight-card p{color:var(--ink-soft);font-size:.95rem;line-height:1.6}
+
+  /* ===== REVEAL ON SCROLL ===== */
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.2,.6,.2,1),transform .8s cubic-bezier(.2,.6,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal[data-delay="1"]{transition-delay:.08s}
+  .reveal[data-delay="2"]{transition-delay:.16s}
+  .reveal[data-delay="3"]{transition-delay:.24s}
+  .reveal[data-delay="4"]{transition-delay:.32s}
+
+  /* ===== FOOTER ===== */
+  footer{
+    border-top:1px solid var(--border-c);padding:60px 28px 80px;
+    max-width:1480px;margin:80px auto 0;
+    display:grid;grid-template-columns:2fr 1fr;gap:60px;
+  }
+  @media (max-width:768px){footer{grid-template-columns:1fr;gap:36px}}
+  footer .ft-brand{font-family:'Fraunces',serif;font-size:2rem;font-style:italic;font-weight:300;letter-spacing:-.02em}
+  footer .ft-brand em{color:var(--accent)}
+  footer p{color:var(--ink-soft);font-size:.95rem;line-height:1.65;max-width:55ch;margin-top:12px}
+  footer .ft-meta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--ink-mute);line-height:2}
+  footer .ft-meta div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:4px 0}
+
+  /* ===== UTIL ===== */
+  .deck{display:flex;gap:1px;background:var(--border-c);border:1px solid var(--border-c);margin-bottom:60px}
+  .deck-cell{background:var(--bg-card);padding:24px;flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+  .deck-cell .k{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute)}
+  .deck-cell .v{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:300;line-height:1;color:var(--ink);letter-spacing:-.02em}
+  .deck-cell .v em{color:var(--accent);font-weight:400}
+  .deck-cell .n{font-size:11px;color:var(--ink-soft);font-family:'Geist',sans-serif;margin-top:2px;line-height:1.4}
+  @media (max-width:680px){.deck{flex-wrap:wrap}.deck-cell{flex:1 1 calc(50% - 1px);min-width:140px}}
+</style>
+</head>
+<body>
+
+<!-- ============ TOP NAV ============ -->
+<nav class="top">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <span class="logo serif">co<em>.labora</em> 15 <span class="sep">/</span></span>
+      <span class="sub">benchmark global · justiça 4.0</span>
+    </div>
+    <div class="nav-links">
+      <a href="#hero">início</a>
+      <a href="#numbers">panorama</a>
+      <a href="#map">mapa</a>
+      <a href="#index">índice</a>
+      <a href="#insights">leituras</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="hero">
+  <div class="hero-ticker mono">
+    <div><span class="blink">●</span> live · v2.0</div>
+    <div>82 INICIATIVAS</div>
+    <div>25 PAÍSES + UE + INT</div>
+    <div>5 CONTINENTES</div>
+  </div>
+
+  <div class="hero-meta reveal">
+    <div class="item">
+      <span class="k">documento</span>
+      <span class="v">Benchmark v2</span>
+    </div>
+    <div class="item">
+      <span class="k">para</span>
+      <span class="v">co.labora 15 · TRT-15</span>
+    </div>
+    <div class="item">
+      <span class="k">horizonte</span>
+      <span class="v">próximos 15 anos</span>
+    </div>
+    <div class="item">
+      <span class="k">método</span>
+      <span class="v">PESTEL · fontes oficiais</span>
+    </div>
+  </div>
+
+  <h1 class="hero-title reveal" data-delay="1">
+    Inventário do<br/>
+    que já é <span class="accent-word">possível</span><br/>
+    nos tribunais<br/>
+    do mundo.
+  </h1>
+
+  <p class="hero-sub lead reveal" data-delay="2">
+    Oitenta e duas iniciativas verificadas em fontes oficiais — em vinte e cinco países, mais União Europeia e organismos internacionais —, organizadas por estrutura PESTEL e mapeadas geograficamente para alimentar o pensamento estratégico do co.labora 15 sobre o futuro do Tribunal Regional do Trabalho da 15ª Região.
+  </p>
+
+  <div class="hero-cta reveal" data-delay="3">
+    <a href="#map" class="btn btn-primary">Abrir o mapa <span class="arrow">↗</span></a>
+    <a href="#index" class="btn btn-ghost">Ver lista completa</a>
+  </div>
+</section>
+
+<!-- ============ NUMBERS / CHARTS ============ -->
+<section id="numbers">
+  <div class="section-head reveal">
+    <div class="num">§01</div>
+    <div class="h-text">
+      <span class="eyebrow">› panorama numérico</span>
+      <h2 class="serif">Como o <em>mundo</em> está reinventando o judiciário</h2>
+      <p class="lead">Três cortes de leitura sobre o conjunto curado: distribuição por categorias PESTEL, concentração por região e curva temporal das implementações desde 2005. Passe o mouse sobre cada gráfico para detalhes.</p>
+    </div>
+  </div>
+
+  <div class="deck reveal" data-delay="1">
+    <div class="deck-cell">
+      <span class="k">total verificado</span>
+      <span class="v"><em>82</em></span>
+      <span class="n">iniciativas com fonte oficial</span>
+    </div>
+    <div class="deck-cell">
+      <span class="k">países cobertos</span>
+      <span class="v">25<em>+2</em></span>
+      <span class="n">países + UE + organismos intl.</span>
+    </div>
+    <div class="deck-cell">
+      <span class="k">desde</span>
+      <span class="v">2002<em>→</em></span>
+      <span class="n">Clarity · linguagem simples</span>
+    </div>
+    <div class="deck-cell">
+      <span class="k">brasil</span>
+      <span class="v">14<em>·</em></span>
+      <span class="n">maior conjunto curado</span>
+    </div>
+    <div class="deck-cell">
+      <span class="k">áfrica · novo</span>
+      <span class="v">8<em>·</em></span>
+      <span class="n">África do Sul, Quênia, Ruanda...</span>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-cell reveal">
+      <div class="chart-head">
+        <h3 class="serif">Iniciativas por categoria PESTEL</h3>
+        <span class="tag mono">§01.a</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartPestel"></canvas></div>
+      <p class="note">Cada iniciativa pode portar mais de uma tag — a soma excede 82. A categoria <strong>IA</strong> foi separada de <em>Tecnológico</em> porque o debate ético-regulatório justifica tratamento próprio.</p>
+    </div>
+    <div class="chart-cell reveal" data-delay="1">
+      <div class="chart-head">
+        <h3 class="serif">Por região do mundo</h3>
+        <span class="tag mono">§01.b</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartRegion"></canvas></div>
+      <p class="note">Brasil concentra 14 entradas porque é o terreno de atuação do TRT-15; América Latina expandida (Chile/Peru/Costa Rica/Uruguai) e África adicionadas nesta versão.</p>
+    </div>
+    <div class="chart-cell reveal" data-delay="2">
+      <div class="chart-head">
+        <h3 class="serif">Linha do tempo</h3>
+        <span class="tag mono">§01.c</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartTimeline"></canvas></div>
+      <p class="note">Salto pós-2020: pandemia forçou a digitalização. Salto pós-2024: chegada da IA generativa aos tribunais.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MAP SECTION ============ -->
+<section id="map">
+  <div class="section-head reveal">
+    <div class="num">§02</div>
+    <div class="h-text">
+      <span class="eyebrow">› cartografia das iniciativas</span>
+      <h2 class="serif">Mapa <em>interativo</em></h2>
+      <p class="lead">Marcadores localizam cada iniciativa em sua jurisdição real. Tamanho do círculo varia conforme o número de iniciativas que passam pelos filtros PESTEL ativos. Passe o mouse para prévia; clique para isolar o país no painel direito; clique em qualquer card para abrir a fonte oficial.</p>
+    </div>
+  </div>
+
+  <div class="map-container reveal">
+    <div class="map-left">
+      <div class="filters">
+        <div class="filter-row">
+          <span class="filter-label">PESTEL ↳</span>
+          <button class="chip active" data-cat="P"><span class="dot cat-P"></span>Político</button>
+          <button class="chip active" data-cat="E"><span class="dot cat-E"></span>Econômico</button>
+          <button class="chip active" data-cat="S"><span class="dot cat-S"></span>Social</button>
+          <button class="chip active" data-cat="T"><span class="dot cat-T"></span>Tecnológico</button>
+          <button class="chip active" data-cat="A"><span class="dot cat-A"></span>IA</button>
+          <button class="chip active" data-cat="V"><span class="dot cat-V"></span>Ambiental</button>
+          <button class="chip active" data-cat="L"><span class="dot cat-L"></span>Legal/Ético</button>
+          <button class="chip-clear" id="clearBtn">limpar</button>
+          <input class="search" id="searchBox" placeholder="buscar palavra..." type="text" />
+        </div>
+      </div>
+
+      <div class="map-stage" id="mapStage">
+        <svg id="worldmap" viewBox="0 0 980 540" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="map-tooltip" id="mapTooltip"></div>
+        <div class="map-hint">
+          <div class="hint-text">passe o mouse para prévia · clique no círculo ou país para fixar · arraste para mover · botões para aproximar</div>
+          <div class="zoom-ctrl">
+            <button class="zoom-btn" id="zoomIn">＋</button>
+            <button class="zoom-btn" id="zoomOut">−</button>
+            <button class="zoom-btn" id="zoomReset">⟲</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="map-right">
+      <div class="panel-head">
+        <span class="eyebrow" id="panelEyebrow">› visão geral · todas as iniciativas</span>
+        <h3 class="serif" id="panelTitle">Inovações <em>judiciárias</em></h3>
+        <p id="panelSub">Clique em um marcador no mapa para isolar um país.</p>
+      </div>
+      <div class="panel-body" id="panelBody"></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ INDEX (full list) ============ -->
+<section id="index">
+  <div class="section-head reveal">
+    <div class="num">§03</div>
+    <div class="h-text">
+      <span class="eyebrow">› índice completo</span>
+      <h2 class="serif">Oitenta e duas <em>inspirações</em>, em ordem</h2>
+      <p class="lead">Conjunto completo, ordenado do mais recente para o mais antigo. Cada card abre a fonte oficial em nova aba. Os filtros PESTEL acima também atuam aqui.</p>
+    </div>
+  </div>
+
+  <div class="index-grid" id="indexGrid"></div>
+</section>
+
+<!-- ============ INSIGHTS ============ -->
+<section id="insights">
+  <div class="section-head reveal">
+    <div class="num">§04</div>
+    <div class="h-text">
+      <span class="eyebrow">› leituras estratégicas</span>
+      <h2 class="serif">Quatro <em>provocações</em> para os próximos 15 anos</h2>
+      <p class="lead">Síntese dos padrões observados no benchmark, traduzidos em perguntas que o co.labora 15 pode levar para o planejamento estratégico do TRT-15.</p>
+    </div>
+  </div>
+
+  <div class="insights">
+    <div class="insight-card reveal">
+      <span class="num">i.</span>
+      <h3 class="serif">A IA chegou — e a régua agora é regulatória</h3>
+      <p>EU AI Act classifica IA para a Justiça como high-risk. UNESCO publicou 15 princípios universais. CNJ baixou a Resolução 615/2025. O TRT-15 já tem regulação para usar IA com responsabilidade — o problema deixou de ser <em>se</em>, e passou a ser <em>como</em>. O Chat-JT (CSJT) é o ponto de partida concreto.</p>
+    </div>
+    <div class="insight-card reveal" data-delay="1">
+      <span class="num">ii.</span>
+      <h3 class="serif">Tribunais sem papel e sem distância</h3>
+      <p>Estônia, EAU (98% paperless), Quênia (100% digital desde 2024), Singapura e Dubai mostram que o caminho é audiência assíncrona, resolução online de baixo custo e zero deslocamento. O Juízo 100% Digital brasileiro está alinhado — o salto seguinte é a justiça <em>proativa</em>, que antecipa o litígio.</p>
+    </div>
+    <div class="insight-card reveal" data-delay="2">
+      <span class="num">iii.</span>
+      <h3 class="serif">Linguagem simples como infraestrutura</h3>
+      <p>O Pacto Nacional pela Linguagem Simples (CNJ) e a Recomendação 144/2023 colocam o Brasil ao lado de redes globais como Clarity International e Plain Language International. O TRT-15 já foi reconhecido pelo Selo Linguagem Simples 2025 — pode liderar a versão trabalhista do movimento.</p>
+    </div>
+    <div class="insight-card reveal" data-delay="3">
+      <span class="num">iv.</span>
+      <h3 class="serif">Aprender com os tropeços alheios</h3>
+      <p>COMPAS (EUA) e DataJust (França) são lembretes de que algoritmos podem replicar viés ou ser descontinuados sob pressão regulatória. O caso do advogado argentino sancionado por citar jurisprudência inventada por IA é o aviso mais recente. Inovação requer protocolo de revisão humana <strong>antes</strong> da escala.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>
+    <div class="ft-brand">co<em>.labora</em> 15</div>
+    <p>Plataforma de benchmark global construída para o Laboratório de Inovação do Tribunal Regional do Trabalho da 15ª Região. Dados verificados em maio de 2026 a partir de fontes oficiais (CNJ, CSJT, STJ, STF, TRT-15, judiciary.go.ke, judiciary.org.za, pjud.cl, CEPEJ, UNESCO, EU AI Act, e demais portais institucionais citados em cada card).</p>
+    <p style="margin-top:24px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--ink-mute)">Iniciativa do co.labora 15 · TRT da 15ª Região · Campinas · São Paulo · Brasil</p>
+  </div>
+  <div class="ft-meta mono">
+    <div><span>Versão</span><span>2.0 / mai 2026</span></div>
+    <div><span>Iniciativas</span><span>82</span></div>
+    <div><span>Países</span><span>25 + UE + Intl.</span></div>
+    <div><span>Continentes</span><span>5</span></div>
+    <div><span>Fontes</span><span>oficiais / acad.</span></div>
+    <div><span>Atualização</span><span>contínua</span></div>
+  </div>
+</footer>
+
+<!-- ============ LIBS ============ -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+/* ============================================================
+   DATA — inventário verificado de inovações judiciárias
+   PESTEL tags: P · E · S · T · A · V · L
+   ============================================================ */
+const COUNTRIES = [
+  /* ===== BRASIL ===== */
+  {
+    code:'BR', iso:'076', name:'Brasil', flag:'🇧🇷', region:'América Latina',
+    lat:-12, lon:-50,
+    initiatives:[
+      { title:'Justiça 4.0 (CNJ)', year:2021, tags:['P','T'],
+        desc:'Programa nacional que articula PDPJ-Br, Codex, Sinapses, Núcleos de Justiça 4.0, Juízo 100% Digital e Balcão Virtual. Coordenado pelo CNJ com apoio do PNUD.',
+        link:'https://www.cnj.jus.br/tecnologia-da-informacao-e-comunicacao/justica-4-0/' },
+      { title:'Resolução CNJ 615/2025', year:2025, tags:['L','A'],
+        desc:'Marco regulatório nacional para uso ético de IA no Judiciário brasileiro. Exige supervisão humana, transparência e auditoria. Atualiza a Resolução 332/2020.',
+        link:'https://atos.cnj.jus.br/atos/detalhar/615' },
+      { title:'VICTOR (STF)', year:2017, tags:['A','T'],
+        desc:'IA do STF para triagem de repercussão geral em recursos extraordinários. Analisa em 5 segundos o que um servidor faria em 44 minutos. Parceria com a UnB.',
+        link:'https://portal.stf.jus.br/noticias/verNoticiaDetalhe.asp?idConteudo=507426&ori=1' },
+      { title:'Sócrates · Athos · e-Juris (STJ)', year:2019, tags:['A'],
+        desc:'Sócrates identifica controvérsias jurídicas em recursos especiais. Athos detecta processos repetitivos antes da distribuição. e-Juris assiste pesquisa jurisprudencial.',
+        link:'https://www.stj.jus.br/sites/portalp/Paginas/Comunicacao/Noticias/09032021-Inteligencia-artificial-esta-presente-em-metade-dos-tribunais-brasileiros--aponta-estudo-inedito.aspx' },
+      { title:'Bem-te-vi (TST)', year:2018, tags:['A'],
+        desc:'Sistema do TST que faz triagem e agrupamento automático de processos com temas idênticos. Apoia gabinetes de ministros na gestão do acervo.',
+        link:'https://www.tst.jus.br/-/tst-apresenta-solucoes-de-inteligencia-artificial-em-encontro-nacional-do-judiciario' },
+      { title:'Chat-JT (CSJT)', year:2025, tags:['A','T'],
+        desc:'IA generativa exclusiva da Justiça do Trabalho. Em maio/2025: 20 mil usuários, 328 mil conversas, integra Llama 3.3 70B e Gemini 2.0. Conecta-se ao PJe e ao sistema Falcão.',
+        link:'https://www.cnj.jus.br/justica-do-trabalho-lanca-inteligencia-artificial-para-auxiliar-profissionais-da-instituicao/' },
+      { title:'Gemini (TRT-5/7/15/20 + CSJT)', year:2020, tags:['A'],
+        desc:'Módulo do PJe que agrupa documentos por similaridade temática, facilitando reunião de recursos ordinários similares. Desenvolvido no Hackathon Inova 2019. TRT-15 é piloto.',
+        link:'https://www.csjt.jus.br/web/csjt/-/justi%C3%A7a-do-trabalho-incorpora-intelig%C3%AAncia-artificial-com-foco-na-seguran%C3%A7a-e-na-%C3%A9tica' },
+      { title:'Plataforma Sinapses (TJ-RO → CNJ)', year:2017, tags:['T','A'],
+        desc:'Criada pelo TJ-Rondônia em 2017 e adotada nacionalmente pelo CNJ em 2018. Gerencia, treina e audita modelos de IA usados pelos tribunais.',
+        link:'https://www.cnj.jus.br/tecnologia-da-informacao-e-comunicacao/justica-4-0/plataforma-sinapses/' },
+      { title:'Juízo 100% Digital (Res. CNJ 345)', year:2020, tags:['P','S','T'],
+        desc:'Permite processos inteiramente eletrônicos sem necessidade de presença física. Mais de 7.400 serventias já aderiram em todo o país.',
+        link:'https://www.cnj.jus.br/tecnologia-da-informacao-e-comunicacao/justica-4-0/juizo-100-digital/' },
+      { title:'Pacto Nacional pela Linguagem Simples', year:2023, tags:['S'],
+        desc:'CNJ + tribunais comprometidos com reescrita de documentos jurídicos em linguagem acessível. TRT-15 recebeu Selo Linguagem Simples 2025 pelo projeto "Legalmente Simples".',
+        link:'https://www.cnj.jus.br/programas-e-acoes/pacto-nacional-do-judiciario-pela-linguagem-simples/' },
+      { title:'PDPJ-Br · Codex · DataJud', year:2021, tags:['T'],
+        desc:'PDPJ é a plataforma única que integra os sistemas dos 91 tribunais. Codex consolida peças. DataJud é a base nacional de estatísticas judiciárias.',
+        link:'https://www.cnj.jus.br/pdpj-br/' },
+      { title:'Sniper (CNJ)', year:2021, tags:['T'],
+        desc:'Sistema Nacional de Investigação Patrimonial e Recuperação de Ativos. Cruza dados de devedores para localizar bens — relevante para a fase de execução trabalhista.',
+        link:'https://www.cnj.jus.br/tecnologia-da-informacao-e-comunicacao/justica-4-0/sniper/' },
+      { title:'Monitor do Trabalho Decente (TST)', year:2020, tags:['S','A'],
+        desc:'Coleta dados de petições iniciais e recursos. Envia alertas automáticos quando o processo trata de trabalho infantil, assédio sexual, contrato de aprendizagem ou trabalho escravo.',
+        link:'https://www.tst.jus.br/web/observatorio-da-igualdade' },
+      { title:'PJe (Processo Judicial Eletrônico)', year:2011, tags:['T'],
+        desc:'Sistema unificado de processo eletrônico no Judiciário trabalhista. TRT-15 foi o primeiro grande TRT a concluir a implantação na 1ª instância (julho/2014).',
+        link:'https://www.tst.jus.br/web/pje/historico' }
+    ]
+  },
+
+  /* ===== AMÉRICA LATINA ===== */
+  {
+    code:'AR', iso:'032', name:'Argentina', flag:'🇦🇷', region:'América Latina',
+    lat:-38, lon:-65,
+    initiatives:[
+      { title:'PROMETEA', year:2017, tags:['A'],
+        desc:'IA preditiva do MPF da Cidade de Buenos Aires. Resolve dictames em 20 segundos com 96% de precisão. Aumentou produtividade do escritório em ~300%. Já adotada em Mendoza, Chaco, Corrientes, Santa Fe.',
+        link:'https://mpfciudad.gob.ar/' },
+      { title:'AymurAI (justiça com viés de gênero)', year:2022, tags:['A','S'],
+        desc:'IA para estruturar dados de processos sobre violência contra mulheres. Permite análise estatística de casos antes invisíveis nos dados judiciais.',
+        link:'https://www.techandjustice.bsg.ox.ac.uk/research/argentina' },
+      { title:'IURIX Mind (San Luis)', year:2024, tags:['A','T'],
+        desc:'IA generativa adotada pela judicatura de San Luis para gestão de casos. Treinamento estruturado para juízes coordenado pela Secretaria de Informação Judicial.',
+        link:'https://www.techandjustice.bsg.ox.ac.uk/research/argentina' },
+      { title:'ChatGPT em sentenças (MPF CABA)', year:2024, tags:['A','L'],
+        desc:'MPF da Cidade de Buenos Aires passou a usar ChatGPT para draftar decisões em casos repetitivos de emprego público. Reduz tempo de redação de 1h para ~10min, sempre com revisão humana.',
+        link:'https://restofworld.org/2024/buenos-aires-courts-adopt-chatgpt-draft-rulings/' }
+    ]
+  },
+  {
+    code:'CL', iso:'152', name:'Chile', flag:'🇨🇱', region:'América Latina',
+    lat:-35, lon:-71,
+    initiatives:[
+      { title:'Ley 20.886 + Oficina Judicial Virtual', year:2016, tags:['P','T','L'],
+        desc:'Lei de Tramitação Eletrônica obrigatória. A OJV cobre 448 tribunais de primeira instância e funciona como portal único para advogados e cidadãos. Marco fundador da digitalização chilena.',
+        link:'https://www.pjud.cl/' },
+      { title:'Buscador Jurisprudencial com IA', year:2025, tags:['A','S'],
+        desc:'Lançado em julho/2025 pelo Poder Judicial do Chile. Reúne 1,5 milhão de sentenças anonimizadas com pesquisa por IA. Cobre Corte Suprema, Cortes de Apelações e primeira instância — penal, civil, trabalhista, família, cobrança.',
+        link:'https://www.pjud.cl/prensa-y-comunicaciones/noticias-del-poder-judicial/128371' }
+    ]
+  },
+  {
+    code:'CO', iso:'170', name:'Colômbia', flag:'🇨🇴', region:'América Latina',
+    lat:4, lon:-74,
+    initiatives:[
+      { title:'PretorIA · Corte Constitucional', year:2020, tags:['A','S'],
+        desc:'IA da Corte Constitucional para seleção de tutelas. Reduziu tempo de pré-seleção de 96 dias para 2 minutos. Analisa 2.016 decisões em menos de 2 minutos. Primeiro caso documentado de IA preditiva em tribunal supremo.',
+        link:'https://www.corteconstitucional.gov.co/' },
+      { title:'Sentença com ChatGPT (Juan Manuel Padilla)', year:2023, tags:['A','L'],
+        desc:'Primeiro precedente formal latino-americano de uso explícito de IA generativa em fundamentação judicial — caso sobre acesso a tratamento médico para criança com autismo.',
+        link:'https://www.enter.co/especiales/dev/inteligencia-artificial/como-la-inteligencia-artificial-esta-acelerando-los-tribunales-en-america-latina-y-que-riesgos-trae/' }
+    ]
+  },
+  {
+    code:'MX', iso:'484', name:'México', flag:'🇲🇽', region:'América Latina',
+    lat:23, lon:-102,
+    initiatives:[
+      { title:'Justicia Digital · CDMX', year:2023, tags:['T'],
+        desc:'Portal de gestão digital alinhado ao Código Nacional de Procedimientos Civiles y Familiares (CNPCyF). Foco em oralidade combinada com IA assistiva.',
+        link:'https://www.poderjudicialcdmx.gob.mx/' },
+      { title:'Ley Federal Desarrollo Ético IA', year:2025, tags:['L'],
+        desc:'Proposta apresentada em abril/2025. Marco federal para IA com foco em transparência algorítmica, verificabilidade e supervisão humana — relevante para uso judicial.',
+        link:'https://www.uic.mx/justicia-e-ia-en-mexico-un-mandato-constitucional/' }
+    ]
+  },
+  {
+    code:'PE', iso:'604', name:'Peru', flag:'🇵🇪', region:'América Latina',
+    lat:-10, lon:-76,
+    initiatives:[
+      { title:'Expediente Judicial Electrónico (EJE)', year:2017, tags:['T'],
+        desc:'EJE em processos não-penais com apoio do Banco Mundial. Próxima fase planejada para processos penais com financiamento do BID. Marco da digitalização peruana.',
+        link:'https://justiciatv.pj.gob.pe/transformacion-digital-en-el-poder-judicial-requiere-cambio-estructural-en-la-gestion-de-los-procesos/' },
+      { title:'Mesa de Partes Electrónica', year:2020, tags:['T','S'],
+        desc:'Sistema 24/7 que permite apresentação de petições e demandas pela internet, sem deslocamento ao fórum. Inclui Módulo de Atención al Usuario (MAU) com tira-dúvidas digital.',
+        link:'https://www.pj.gob.pe/' }
+    ]
+  },
+  {
+    code:'CR', iso:'188', name:'Costa Rica', flag:'🇨🇷', region:'América Latina',
+    lat:10, lon:-84,
+    initiatives:[
+      { title:'Sistema de Gestión en Línea', year:2013, tags:['T','S'],
+        desc:'Expediente eletrônico judicial integral disponível em portal e app móvel. Em 2024 (jan-ago): 1,22 milhão de expedientes ativos e 1,86 milhão de escritos eletrônicos. Reglamento sobre Expediente Judicial Electrónico (Circular 104-2013).',
+        link:'https://pj.poder-judicial.go.cr/' }
+    ]
+  },
+  {
+    code:'UY', iso:'858', name:'Uruguai', flag:'🇺🇾', region:'América Latina',
+    lat:-33, lon:-56,
+    initiatives:[
+      { title:'Expediente Electrónico (em discussão)', year:2023, tags:['L','T'],
+        desc:'Suprema Corte uruguaia consultada para projeto legislativo de regulação do expediente eletrônico. Sistemas próprios de gestão da SCJ já operam, mas marco legal segue pendente. Caso que ilustra o desafio regulatório como gargalo da digitalização.',
+        link:'http://www.scielo.org.pe/scielo.php?script=sci_arttext&pid=S2663-91302023000200019' }
+    ]
+  },
+
+  /* ===== ÁFRICA — novo bloco ===== */
+  {
+    code:'ZA', iso:'710', name:'África do Sul', flag:'🇿🇦', region:'África',
+    lat:-29, lon:25,
+    initiatives:[
+      { title:'CaseLines / Court Online', year:2020, tags:['T','V'],
+        desc:'E-filing e gestão eletrônica de provas implantados no Gauteng High Court em jan/2020 — primeiro tribunal sul-africano paperless. Mantém audiências durante a pandemia. Mesmo sistema usado no Reino Unido e nos EAU.',
+        link:'https://www.judiciary.org.za/index.php/court-online' },
+      { title:'CaseLines no Tribunal COMESA', year:2019, tags:['P','T'],
+        desc:'Tribunal de Justiça do Mercado Comum da África Oriental e Austral adotou CaseLines em 2019. Marco regional: primeira corte supranacional africana totalmente digital. Apoia integração econômica do bloco.',
+        link:'https://www.ebnet.co.za/covid-19-silver-lining-the-dawn-of-a-new-digital-era-for-south-african-dispute-resolution/' }
+    ]
+  },
+  {
+    code:'KE', iso:'404', name:'Quênia', flag:'🇰🇪', region:'África',
+    lat:1, lon:38,
+    initiatives:[
+      { title:'E-Filing System', year:2020, tags:['T','S'],
+        desc:'Lançado em julho/2020 em Nairóbi com apoio do IDLO. Em junho/2021 já tinha 67.299 matérias arquivadas. Inclui Civil Procedure (Amendment) Rules 2020 e Practice Directions on Electronic Case Management.',
+        link:'https://judiciary.go.ke/e-filling-is-the-solution-to-efficient-judiciary/' },
+      { title:'Tribunais 100% paperless', year:2024, tags:['T','V','S'],
+        desc:'Em 11/mar/2024 a Chief Justice Martha Koome anunciou que a partir de jul/2024 nenhum tribunal queniano poderia imprimir peças. Cobertura digital em 51 condados. Inclui causelist portal e painel de tracking de processos.',
+        link:'https://www.africanlawbusiness.com/news/20354-kenyan-courts-embrace-the-digital-age/' }
+    ]
+  },
+  {
+    code:'RW', iso:'646', name:'Ruanda', flag:'🇷🇼', region:'África',
+    lat:-2, lon:30,
+    initiatives:[
+      { title:'IECMS · Integrated Electronic Case Management System', year:2016, tags:['T','P'],
+        desc:'Pioneiro em gestão digital de tribunais na África Subsaariana. Operação plena desde 2016: filing online, agendamento, gestão integrada. Citado como referência por Etiópia e Quênia.',
+        link:'https://kippra.or.ke/leveraging-on-digital-technology-in-administration-of-justice/' }
+    ]
+  },
+  {
+    code:'NG', iso:'566', name:'Nigéria', flag:'🇳🇬', region:'África',
+    lat:9, lon:8,
+    initiatives:[
+      { title:'E-filing + audiências virtuais', year:2020, tags:['T'],
+        desc:'Vários estados nigerianos adotaram e-filing e audiências por vídeo sob a Judicial IT Policy nacional. Adoção heterogênea entre jurisdições é um aprendizado importante: digitalização sem padronização cria desigualdades.',
+        link:'https://indepthresearch.org/blog/the-rise-of-e-courts/' }
+    ]
+  },
+  {
+    code:'ET', iso:'231', name:'Etiópia', flag:'🇪🇹', region:'África',
+    lat:9, lon:40,
+    initiatives:[
+      { title:'Proclamação 25/2025 + ICMIS', year:2025, tags:['L','T'],
+        desc:'Modernização do judiciário etíope: lei reconhece assinaturas digitais, autoriza videoaudiências, e desdobra o software ICMIS para gestão de casos. Apoiado por campanha nacional de alfabetização digital.',
+        link:'https://lexafrica.com/2026/03/modernizing-ethiopias-courts-electronic-filing/' }
+    ]
+  },
+  {
+    code:'TZ', iso:'834', name:'Tanzânia', flag:'🇹🇿', region:'África',
+    lat:-6, lon:35,
+    initiatives:[
+      { title:'JCMS (Judicial Case Management)', year:2023, tags:['T'],
+        desc:'Piloto do Judicial Case Management System para e-filing e publicação de sentenças online. Caso em andamento na onda africana de digitalização judiciária pós-COVID.',
+        link:'https://indepthresearch.org/blog/the-rise-of-e-courts/' }
+    ]
+  },
+
+  /* ===== EUROPA ===== */
+  {
+    code:'EE', iso:'233', name:'Estônia', flag:'🇪🇪', region:'Europa',
+    lat:59, lon:26,
+    initiatives:[
+      { title:'e-File Central Information System', year:2005, tags:['T','P'],
+        desc:'Sistema processual eletrônico nacional, em operação desde 2005. Cidadão autenticado submete qualquer tipo de processo online. Integrado via X-Road a outras bases (política "once-only").',
+        link:'https://e-estonia.com/solutions/e-justice/' },
+      { title:'Salme · transcrição por IA', year:2022, tags:['A','S'],
+        desc:'Reconhecimento de voz para audiências, 92% de precisão. Desenvolvido por CGI Estonia e Tilde. Reduz transcrição de 112 horas para minutos em casos criminais longos.',
+        link:'https://investinestonia.com/introducing-salme-estonian-courts-speech-recognition-assistant/' },
+      { title:'Krat · anonimização', year:2023, tags:['A','L'],
+        desc:'IA para anonimizar dados pessoais em decisões judiciais. Já anonimizou quase 80 mil sentenças antigas para republicação pública.',
+        link:'https://www.techandjustice.bsg.ox.ac.uk/research/estonia' },
+      { title:'Ordem de pagamento semi-automática', year:2017, tags:['T','E'],
+        desc:'Procedimento para pequenas causas até €8.000. Sistema gera automaticamente ordens com força de sentença. Cerca de 50% dos casos civis tramitam por esse fluxo.',
+        link:'https://www.justdigi.ee/en/news/estonia-does-not-develop-ai-judge' }
+    ]
+  },
+  {
+    code:'GB', iso:'826', name:'Reino Unido', flag:'🇬🇧', region:'Europa',
+    lat:54, lon:-2,
+    initiatives:[
+      { title:'HMCTS Reform Programme', year:2016, tags:['P','T','E'],
+        desc:'Reforma de £1bi em mais de 50 projetos para modernizar tribunais civis, familiares, trabalhistas e criminais. Inclui Online Civil Money Claims, MyHMCTS, Common Platform e Video Hearing Service.',
+        link:'https://www.gov.uk/government/organisations/hm-courts-and-tribunals-service' },
+      { title:'Online Civil Money Claims (OCMC)', year:2018, tags:['T','S','E'],
+        desc:'Sistema digital obrigatório (desde jul/2025) para reclamações até £25.000. Inclui negociação online e mediação automatizada.',
+        link:'https://insidehmcts.blog.gov.uk/category/court-and-tribunal-reform/' },
+      { title:'MyHMCTS · Employment Tribunal', year:2022, tags:['T'],
+        desc:'Portal digital obrigatório para reclamações trabalhistas. Submete ET1/ET3 e bundles eletronicamente. Integra com a Acas.',
+        link:'https://www.gov.uk/government/news/government-launches-online-employment-tribunal-service' },
+      { title:'Courts Reform Act 2021', year:2021, tags:['L'],
+        desc:'Lei que cria autoridade permanente para audiências remotas, audiências apenas em documentos e audiências assíncronas. Marco regulatório do digital-by-default judicial britânico.',
+        link:'https://www.legislation.gov.uk/' }
+    ]
+  },
+  {
+    code:'DE', iso:'276', name:'Alemanha', flag:'🇩🇪', region:'Europa',
+    lat:51, lon:10,
+    initiatives:[
+      { title:'OLGA · OLG Stuttgart', year:2022, tags:['A','T'],
+        desc:'Assistente de IA no Higher Regional Court de Stuttgart. Faz categorização de casos e extração de metadados. Reportou redução superior a 50% em tempos de processamento.',
+        link:'https://www.lexology.com/library/detail.aspx?g=4000e4f2-6f32-4616-ab0a-138d04c2c5a6' }
+    ]
+  },
+  {
+    code:'FR', iso:'250', name:'França', flag:'🇫🇷', region:'Europa',
+    lat:46, lon:2,
+    initiatives:[
+      { title:'Conseil d\'État · Carta IA jurisdição administrativa', year:2025, tags:['L','A'],
+        desc:'Marco francês adotado em dezembro/2025 para uso de IA nos tribunais administrativos. Define princípios, processos de revisão humana e regras de transparência.',
+        link:'https://www.conseil-etat.fr/' },
+      { title:'DataJust · sistema descontinuado', year:2020, tags:['A','L'],
+        desc:'Algoritmo do Ministério da Justiça para padronizar indenizações por danos corporais. Após preocupações com viés algorítmico e revisão da CNIL, foi descontinuado em jan/2022. Caso emblemático de freio regulatório.',
+        link:'https://www.cnil.fr/en' }
+    ]
+  },
+  {
+    code:'EU', iso:'XEU', name:'União Europeia', flag:'🇪🇺', region:'Europa',
+    lat:50, lon:14,
+    initiatives:[
+      { title:'EU AI Act · Regulation 2024/1689', year:2024, tags:['L','A'],
+        desc:'Primeiro marco regulatório horizontal de IA no mundo. Classifica IA para administração da Justiça como "high-risk" (Anexo III). Aplicação plena em 2/ago/2026. Multas até €35mi ou 7% do faturamento.',
+        link:'https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai' },
+      { title:'CEPEJ · Carta Ética IA na Justiça', year:2018, tags:['L'],
+        desc:'Primeiro texto europeu com princípios éticos para IA em sistemas judiciais (Conselho da Europa). Cinco princípios: direitos fundamentais, não-discriminação, qualidade/segurança, transparência, controle do usuário.',
+        link:'https://www.coe.int/en/web/cepej/cepej-european-ethical-charter-on-the-use-of-artificial-intelligence-ai-in-judicial-systems-and-their-environment' },
+      { title:'Council of Europe · AI Framework Convention', year:2024, tags:['L'],
+        desc:'Primeiro tratado internacional vinculante sobre IA, direitos humanos, democracia e Estado de Direito. UE é signatária. Base para alinhamento normativo global.',
+        link:'https://www.coe.int/en/web/artificial-intelligence/the-framework-convention-on-artificial-intelligence' },
+      { title:'IDEA Project · justiça digital trabalhista', year:2025, tags:['A','S','L'],
+        desc:'Projeto UE com 6 estados-membro (Bélgica, Croácia, Tchéquia, Estônia, Itália, Lituânia) que mapeia maturidade digital em direito do trabalho. Inclui chatbot legal para orientação de trabalhadores.',
+        link:'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12894374/' }
+    ]
+  },
+
+  /* ===== ÁSIA ===== */
+  {
+    code:'CN', iso:'156', name:'China', flag:'🇨🇳', region:'Ásia',
+    lat:35, lon:105,
+    initiatives:[
+      { title:'Tribunal de Internet de Hangzhou', year:2017, tags:['P','T'],
+        desc:'Primeiro tribunal totalmente online do mundo. Opera 24/7 para disputas de e-commerce, propriedade intelectual digital e contratos online. Tempo médio reduzido em 65% vs presencial.',
+        link:'https://english.bjinternetcourt.gov.cn/' },
+      { title:'Tribunais de Internet Beijing + Guangzhou', year:2018, tags:['P','T'],
+        desc:'Beijing Internet Court: 11 tipos de casos, 400 mil+ casos recebidos, 85% resolvidos. Geração automática de minutas por machine learning.',
+        link:'https://english.bjinternetcourt.gov.cn/' },
+      { title:'Blockchain judicial (Hangzhou-Alibaba)', year:2018, tags:['T'],
+        desc:'Primeiro tribunal a reconhecer blockchain como meio válido de preservação de prova. Plataformas: Judicial Blockchain (Hangzhou), Balance Chain (Beijing), Internet Legal Chain (Guangzhou).',
+        link:'https://www.thechinastory.org/smart-courts-toward-the-digitisation-and-automation-of-justice/' },
+      { title:'Intelligent Trial 1.0 (Hebei)', year:2016, tags:['A'],
+        desc:'IA assistente para juízes em 178 cortes locais. Em 5 anos ajudou ~3.000 juízes em 150 mil casos, reduzindo carga em um terço.',
+        link:'https://www.judcom.nsw.gov.au/publications/benchbks/judicial_officers/artificial_intelligence_and_litigation.html' },
+      { title:'Mediação online em massa', year:2020, tags:['S','T'],
+        desc:'Plataforma nacional de mediação: 90 mil+ organizações e 350 mil+ mediadores. Em 2021: 11,4 milhões de casos aceitos online; 1,27 milhão de audiências online.',
+        link:'https://cms.law/en/int/expert-guides/cms-expert-guide-to-digital-litigation/china' }
+    ]
+  },
+  {
+    code:'SG', iso:'702', name:'Singapura', flag:'🇸🇬', region:'Ásia',
+    lat:1.3, lon:104,
+    initiatives:[
+      { title:'Community Justice & Tribunal System (CJTS)', year:2017, tags:['T','S'],
+        desc:'Solução integrada para pequenas causas, reclamações trabalhistas e proteção contra assédio. e-mediação assíncrona permite negociar sem coincidir agendas.',
+        link:'https://www.judiciary.gov.sg/news-and-resources/news/news-details/justice-aidan-xu--speech-at-the-national-conference-on-judicial-process-re-engineering-and-digital-transformation' },
+      { title:'aCDR · Async Court Dispute Resolution', year:2022, tags:['T','S'],
+        desc:'Resolução assíncrona — partes e juízes contribuem em momentos diferentes. Reduz fricção de coincidência de agendas e amplia acesso à justiça.',
+        link:'https://www.judiciary.gov.sg/' },
+      { title:'AI Case Summaries (Tribunal Magistrates)', year:2024, tags:['A'],
+        desc:'Geração automática de sumários de casos para magistrados especializados. Permite foco no mérito e mantém qualidade adjudicatória em alta volumetria.',
+        link:'https://www.techandjustice.bsg.ox.ac.uk/research/singapore' },
+      { title:'Divorce Assets Informative Estimator', year:2024, tags:['A','S'],
+        desc:'IA que estima divisão patrimonial em divórcios, ajudando litigantes sem advogado (SRPs) a entender expectativas razoáveis.',
+        link:'https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5367843' },
+      { title:'Courts of the Future Taskforce', year:2016, tags:['P'],
+        desc:'Força-tarefa institucional liderada pelo juiz Lee Seiu Kin. Coordenou adoção tecnológica e formou o ecossistema judicial-tecnológico de Singapura.',
+        link:'https://lawtech.asia/legal-tech-ing-our-way-to-justice/' }
+    ]
+  },
+  {
+    code:'IN', iso:'356', name:'Índia', flag:'🇮🇳', region:'Ásia',
+    lat:21, lon:78,
+    initiatives:[
+      { title:'e-Courts Mission Mode (Phase III)', year:2023, tags:['P','T'],
+        desc:'Projeto pan-indiano com orçamento de ₹7.210 crore (2023-2027). Digitaliza tribunais distritais e integra IA e blockchain. ₹53,57 cr alocados especificamente para IA judicial.',
+        link:'https://ecourts.gov.in/ecourts_home/' },
+      { title:'SUVAS · tradução para 18 idiomas', year:2019, tags:['A','S'],
+        desc:'Software de tradução da Suprema Corte que verte decisões entre inglês e 18 línguas indianas. Em 2023, 31 mil das 36 mil sentenças da Corte foram traduzidas.',
+        link:'https://www.sci.gov.in/' },
+      { title:'SUPACE · pesquisa de precedentes', year:2021, tags:['A'],
+        desc:'IA da Suprema Corte que extrai fatos, provisões legais e jurisprudência. Ainda em uso experimental, limitada a matérias criminais selecionadas em Bombaim e Delhi.',
+        link:'https://main.sci.gov.in/' },
+      { title:'LegRAA · Legal Research Analysis', year:2024, tags:['A'],
+        desc:'Sistema NLP para pesquisa legal. Analisa documentos, extrai referências e organiza pesquisa para juízes — sem emitir recomendações de decisão.',
+        link:'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2226283' }
+    ]
+  },
+  {
+    code:'AE', iso:'784', name:'Emirados Árabes Unidos', flag:'🇦🇪', region:'Ásia',
+    lat:24, lon:54,
+    initiatives:[
+      { title:'Court of the Future (GITEX 2025)', year:2025, tags:['P','T','A'],
+        desc:'Anunciado em out/2025: tribunal totalmente digital com IA, paperless e até "advogado virtual" para casos simples. Reconhecimento facial para acesso, agendamento via app.',
+        link:'https://gulfnews.com/uae/government/no-papers-no-documents-no-lawyers-uae-unveils-court-of-the-future-1.500310563' },
+      { title:'Smart Courts Dubai · 98% paperless', year:2018, tags:['T','V','E'],
+        desc:'Dubai Paperless Strategy economiza 1 bilhão de AED por ano. Tribunais com filing 100% online, rastreio em tempo real e 98% de redução de papel.',
+        link:'https://www.dc.gov.ae/' },
+      { title:'Aisha · IA generativa do Min. da Justiça', year:2024, tags:['A','S'],
+        desc:'Assistente de IA generativa do Ministério da Justiça dos EAU. Aconselhamento legal em tempo real, redação de petições e explicações multimídia em base jurídica oficial.',
+        link:'https://www.techandjustice.bsg.ox.ac.uk/research/united-arab-emirates' },
+      { title:'Metaverse Litigation (DLD)', year:2023, tags:['T'],
+        desc:'Dubai Land Department lançou plataforma de litígio em metaverso para disputas de aluguel. Audiências em 3D virtual combinadas com "Judicial Probe", IA que resolve casos simples em minutos.',
+        link:'https://gulfbusiness.com/ai-metaverse-to-solve-rental-disputes-in-dubai/' },
+      { title:'Abu Dhabi · QR translation de sentenças', year:2023, tags:['S','A'],
+        desc:'Abu Dhabi Judicial Department introduziu tradução instantânea de sentenças em múltiplos idiomas via QR code anexado ao documento — facilita acesso para expatriados.',
+        link:'https://www.adjd.gov.ae/' }
+    ]
+  },
+
+  /* ===== AMÉRICA DO NORTE ===== */
+  {
+    code:'US', iso:'840', name:'Estados Unidos', flag:'🇺🇸', region:'América do Norte',
+    lat:40, lon:-98,
+    initiatives:[
+      { title:'COMPAS · risco de reincidência', year:2010, tags:['A','L'],
+        desc:'Algoritmo proprietário da Equivant usado em sentenças (Wisconsin v. Loomis). ProPublica apontou viés racial. Tornou-se referência global sobre os RISCOS da IA preditiva em decisões judiciais.',
+        link:'https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing' },
+      { title:'AI Practice Notes · cortes federais', year:2024, tags:['L'],
+        desc:'Após casos de citações jurisprudenciais inventadas por IA, mais de 50 cortes federais publicaram orientações específicas para uso de IA generativa por advogados.',
+        link:'https://www.uscourts.gov/' }
+    ]
+  },
+  {
+    code:'CA', iso:'124', name:'Canadá', flag:'🇨🇦', region:'América do Norte',
+    lat:55, lon:-100,
+    initiatives:[
+      { title:'Civil Resolution Tribunal (BC)', year:2016, tags:['T','S','E'],
+        desc:'Primeiro tribunal totalmente online do Canadá. Disputas de condomínio, pequenas causas até C$5.000, acidentes de trânsito até C$50.000. Economia projetada de C$2,5mi/ano para o estado.',
+        link:'https://civilresolutionbc.ca/' },
+      { title:'Solution Explorer · CRT', year:2016, tags:['S'],
+        desc:'Ferramenta integrada ao CRT. Faz perguntas, classifica o tipo de problema legal e oferece informação personalizada gratuita. Pensada para litigantes sem advogado.',
+        link:'https://civilresolutionbc.ca/how-the-crt-works/getting-started/' },
+      { title:'amica · família/divórcio', year:2020, tags:['A','S'],
+        desc:'Plataforma de IA para acordos de divórcio: assessoria de partilha e arranjos parentais. Resultado em linguagem simples. Vencedora do iAward 2020.',
+        link:'https://www.amica.gov.au/' }
+    ]
+  },
+
+  /* ===== OCEANIA ===== */
+  {
+    code:'AU', iso:'036', name:'Austrália', flag:'🇦🇺', region:'Oceania',
+    lat:-27, lon:134,
+    initiatives:[
+      { title:'amica (Family Court)', year:2020, tags:['A','S'],
+        desc:'Plataforma nacional australiana de IA para apoiar casais em divórcio: arranjos parentais, divisão de bens, acordos em linguagem simples. Mobile-first.',
+        link:'https://www.amica.gov.au/' },
+      { title:'NSW · Generative AI Guidelines', year:2024, tags:['L'],
+        desc:'Diretrizes da Suprema Corte de New South Wales para uso de IA generativa por juízes e advogados. Marco que outras jurisdições australianas têm seguido.',
+        link:'https://www.supremecourt.justice.nsw.gov.au/' },
+      { title:'Victorian Law Reform · AI in Courts', year:2024, tags:['L','A'],
+        desc:'Consulta pública sobre uso de IA em tribunais e tribunais administrativos de Victoria. Documento de referência para os debates regulatórios australianos.',
+        link:'https://www.lawreform.vic.gov.au/publication/artificial-intelligence-in-victorias-courts-and-tribunals-consultation-paper/' }
+    ]
+  },
+
+  /* ===== INTERNACIONAL ===== */
+  {
+    code:'INT', iso:'XINT', name:'Organismos Internacionais', flag:'🌐', region:'Internacional',
+    lat:0, lon:-30,
+    initiatives:[
+      { title:'UNESCO · Guidelines for AI in Courts', year:2025, tags:['L','A','S'],
+        desc:'15 princípios universais para uso de IA em tribunais. Inclui proteção de direitos humanos, não-discriminação, transparência, supervisão humana significativa. Toolkit treinou 36 mil operadores em 160 países.',
+        link:'https://www.unesco.org/en/articles/ai-courtroom-unescos-new-guidelines-judiciary' },
+      { title:'UNESCO · Ethics of AI Recommendation', year:2021, tags:['L'],
+        desc:'Recomendação adotada por 193 estados-membros. Define valores e princípios para uso ético da IA. Base do Global Toolkit on AI and the Rule of Law for the Judiciary.',
+        link:'https://www.unesco.org/en/articles/recommendation-ethics-artificial-intelligence' },
+      { title:'OECD AI Principles', year:2019, tags:['L'],
+        desc:'Primeiros princípios intergovernamentais sobre IA. Transparência, robustez, accountability, equidade. Brasil, Argentina e demais latino-americanos são signatários.',
+        link:'https://oecd.ai/en/ai-principles' },
+      { title:'Plain Language International (Clarity)', year:2002, tags:['S'],
+        desc:'Rede internacional com 650+ membros em 50 países dedicada a promover linguagem jurídica simples. Influência direta no Pacto Nacional brasileiro pela Linguagem Simples.',
+        link:'https://www.clarity-international.org/' }
+    ]
+  }
+];
+
+const CATEGORIES = {
+  P:{label:'Político',     color:'#6E8AB8', desc:'Reformas, programas nacionais, força-tarefa'},
+  E:{label:'Econômico',    color:'#D9A84A', desc:'Eficiência, redução de custo, ODR'},
+  S:{label:'Social',       color:'#82B19F', desc:'Acessibilidade, linguagem simples, inclusão'},
+  T:{label:'Tecnológico',  color:'#7FA4D9', desc:'Plataformas, blockchain, metaverso'},
+  A:{label:'IA',           color:'#E85D3F', desc:'Machine learning, LLMs, automação cognitiva'},
+  V:{label:'Ambiental',    color:'#9ABF8C', desc:'Sustentabilidade, paperless'},
+  L:{label:'Legal/Ético',  color:'#B57BAE', desc:'Regulações, princípios, marcos'}
+};
+
+const state = {
+  activeCats: new Set(['P','E','S','T','A','V','L']),
+  selectedCountry: null,
+  search: ''
+};
+
+function filterInitiatives(initiatives){
+  return initiatives.filter(it=>{
+    const matchCat = it.tags.some(t => state.activeCats.has(t));
+    if(!matchCat) return false;
+    if(state.search){
+      const q = state.search.toLowerCase();
+      const blob = (it.title+' '+it.desc+' '+it.tags.join(' ')).toLowerCase();
+      if(!blob.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+/* ============================================================
+   WORLD MAP — TopoJSON via CDN, d3-geo Natural Earth projection
+   ============================================================ */
+const svg = d3.select('#worldmap');
+const width = 980, height = 540;
+const projection = d3.geoNaturalEarth1().scale(180).translate([width/2, height/2 + 10]);
+const path = d3.geoPath(projection);
+
+const gMap = svg.append('g').attr('class','g-map');
+const gCountries = gMap.append('g').attr('class','g-countries');
+const gMarkers = gMap.append('g').attr('class','g-markers');
+
+// zoom
+const zoom = d3.zoom().scaleExtent([1,8]).on('zoom', (e)=>{
+  gMap.attr('transform', e.transform);
+  gMarkers.selectAll('.marker').attr('vector-effect','non-scaling-stroke');
+});
+svg.call(zoom);
+
+const tooltip = document.getElementById('mapTooltip');
+
+// Load world map data
+d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
+  const countries = topojson.feature(world, world.objects.countries);
+  const initiativeByIso = {};
+  COUNTRIES.forEach(c => {
+    if(c.iso && c.iso.length === 3 && !c.iso.startsWith('X')){
+      initiativeByIso[c.iso] = c;
+    }
+  });
+
+  gCountries.selectAll('path.country')
+    .data(countries.features)
+    .enter()
+    .append('path')
+    .attr('class', d => {
+      const isoStr = String(d.id).padStart(3,'0');
+      return initiativeByIso[isoStr] ? 'country has-data' : 'country';
+    })
+    .attr('d', path)
+    .on('mouseenter', function(event, d){
+      const isoStr = String(d.id).padStart(3,'0');
+      const country = initiativeByIso[isoStr];
+      if(country){
+        const filtered = filterInitiatives(country.initiatives);
+        if(filtered.length){
+          showTooltip(event, country, filtered.length);
+        }
+      }
+    })
+    .on('mousemove', positionTooltip)
+    .on('mouseleave', hideTooltip)
+    .on('click', function(event, d){
+      const isoStr = String(d.id).padStart(3,'0');
+      const country = initiativeByIso[isoStr];
+      if(country){
+        state.selectedCountry = state.selectedCountry === country.code ? null : country.code;
+        renderAll();
+      }
+    });
+
+  renderAll();
+}).catch(err => {
+  console.error('Falha ao carregar mapa:', err);
+  // Fallback: show error message
+  svg.append('text').attr('x', width/2).attr('y', height/2)
+    .attr('text-anchor','middle')
+    .attr('fill', 'var(--ink-mute)')
+    .attr('font-family', 'JetBrains Mono')
+    .attr('font-size', 12)
+    .text('Mapa indisponível — verifique conexão. Cards abaixo seguem funcionando.');
+  renderAll();
+});
+
+function showTooltip(event, country, count){
+  tooltip.innerHTML = `<strong>${country.flag} ${country.name}</strong>${count} ${count===1?'iniciativa':'iniciativas'} · clique para detalhar`;
+  tooltip.classList.add('show');
+  positionTooltip(event);
+}
+function hideTooltip(){ tooltip.classList.remove('show'); }
+function positionTooltip(event){
+  const stage = document.getElementById('mapStage').getBoundingClientRect();
+  tooltip.style.left = (event.clientX - stage.left) + 'px';
+  tooltip.style.top = (event.clientY - stage.top) + 'px';
+}
+
+function renderMarkers(){
+  gMarkers.selectAll('*').remove();
+
+  // Country markers (only for visible/filtered countries)
+  COUNTRIES.forEach(country => {
+    const filtered = filterInitiatives(country.initiatives);
+    if(filtered.length === 0) return;
+    const coords = projection([country.lon, country.lat]);
+    if(!coords) return;
+
+    const r = Math.min(7 + Math.sqrt(filtered.length) * 2.2, 16);
+    const isSelected = state.selectedCountry === country.code;
+
+    const g = gMarkers.append('g')
+      .attr('class', 'marker' + (isSelected ? ' selected' : ''))
+      .attr('transform', `translate(${coords[0]},${coords[1]})`);
+
+    g.append('circle').attr('class','outer').attr('r', r + 6);
+    g.append('circle').attr('class','core').attr('r', r);
+    g.append('text').attr('class','count').text(filtered.length);
+
+    g.on('mouseenter', (event)=> showTooltip(event, country, filtered.length))
+     .on('mousemove', positionTooltip)
+     .on('mouseleave', hideTooltip)
+     .on('click', (event)=>{
+       event.stopPropagation();
+       state.selectedCountry = state.selectedCountry === country.code ? null : country.code;
+       renderAll();
+     });
+  });
+
+  // Country path highlight for selected
+  gCountries.selectAll('path.country').classed('selected', function(d){
+    const isoStr = String(d.id).padStart(3,'0');
+    const c = COUNTRIES.find(x => x.iso === isoStr);
+    return c && c.code === state.selectedCountry;
+  });
+}
+
+/* ============================================================
+   SIDE PANEL + INDEX RENDERING
+   ============================================================ */
+function buildCard(it, country, variant='panel'){
+  const tagsHtml = it.tags.map(t => {
+    const cat = CATEGORIES[t];
+    return `<span class="ini-tag cat-${t}">${cat ? cat.label : t}</span>`;
+  }).join('');
+
+  const cls = variant === 'index' ? 'idx-card' : 'ini-card';
+  const titleEl = variant === 'index' ? 'h4' : 'h4';
+
+  return `
+    <a class="${cls}" href="${it.link}" target="_blank" rel="noopener noreferrer">
+      <span class="ext">↗</span>
+      <div class="${variant === 'index' ? 'meta' : 'ini-meta'}">
+        <span class="flag">${country.flag}</span>
+        <span>${country.name}</span>
+        <span class="year">· ${it.year || '—'}</span>
+      </div>
+      <${titleEl}>${it.title}</${titleEl}>
+      <p>${it.desc}</p>
+      <div class="${variant === 'index' ? 'tags' : 'ini-tags'}">${tagsHtml}</div>
+    </a>
+  `;
+}
+
+const panelBody = document.getElementById('panelBody');
+const panelTitle = document.getElementById('panelTitle');
+const panelEyebrow = document.getElementById('panelEyebrow');
+const panelSub = document.getElementById('panelSub');
+
+function renderPanel(){
+  let html = '';
+  let cards = [];
+
+  if(state.selectedCountry){
+    const country = COUNTRIES.find(c => c.code === state.selectedCountry);
+    const filtered = filterInitiatives(country.initiatives);
+    panelEyebrow.textContent = `› país selecionado · clique no mesmo marcador para limpar`;
+    panelTitle.innerHTML = `${country.flag} <em>${country.name}</em>`;
+    panelSub.textContent = `${filtered.length} ${filtered.length===1?'iniciativa':'iniciativas'} no escopo PESTEL atual.`;
+    cards = filtered.map(it => ({it, country}));
+  } else {
+    panelEyebrow.textContent = `› visão geral · todas as iniciativas filtradas`;
+    panelTitle.innerHTML = `Inovações <em>judiciárias</em>`;
+    panelSub.textContent = `Clique em um marcador no mapa para isolar um país.`;
+    COUNTRIES.forEach(country => {
+      filterInitiatives(country.initiatives).forEach(it => cards.push({it, country}));
+    });
+    cards.sort((a,b)=> (b.it.year||0) - (a.it.year||0));
+  }
+
+  if(cards.length === 0){
+    panelBody.innerHTML = `<div class="empty"><span class="big">∅</span>Nenhuma iniciativa corresponde aos filtros ativos.</div>`;
+  } else {
+    panelBody.innerHTML = cards.map(({it, country}) => buildCard(it, country, 'panel')).join('');
+  }
+}
+
+const indexGrid = document.getElementById('indexGrid');
+function renderIndex(){
+  let cards = [];
+  COUNTRIES.forEach(country => {
+    filterInitiatives(country.initiatives).forEach(it => cards.push({it, country}));
+  });
+  cards.sort((a,b)=> (b.it.year||0) - (a.it.year||0));
+
+  if(cards.length === 0){
+    indexGrid.innerHTML = `<div class="empty" style="grid-column:1/-1"><span class="big">∅</span>Nenhuma iniciativa corresponde aos filtros ativos.</div>`;
+  } else {
+    indexGrid.innerHTML = cards.map(({it, country}) => buildCard(it, country, 'index')).join('');
+  }
+}
+
+function renderAll(){
+  renderMarkers();
+  renderPanel();
+  renderIndex();
+}
+
+/* ============================================================
+   FILTERS
+   ============================================================ */
+document.querySelectorAll('.chip[data-cat]').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    const cat = b.dataset.cat;
+    if(state.activeCats.has(cat)){
+      state.activeCats.delete(cat);
+      b.classList.remove('active');
+    } else {
+      state.activeCats.add(cat);
+      b.classList.add('active');
+    }
+    renderAll();
+  });
+});
+
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  if(state.activeCats.size === 7){
+    state.activeCats.clear();
+    document.querySelectorAll('.chip[data-cat]').forEach(b=>b.classList.remove('active'));
+  } else {
+    state.activeCats = new Set(['P','E','S','T','A','V','L']);
+    document.querySelectorAll('.chip[data-cat]').forEach(b=>b.classList.add('active'));
+  }
+  state.selectedCountry = null;
+  document.getElementById('searchBox').value = '';
+  state.search = '';
+  renderAll();
+});
+
+document.getElementById('searchBox').addEventListener('input', (e)=>{
+  state.search = e.target.value.trim();
+  renderAll();
+});
+
+document.getElementById('zoomIn').addEventListener('click', ()=> svg.transition().call(zoom.scaleBy, 1.4));
+document.getElementById('zoomOut').addEventListener('click', ()=> svg.transition().call(zoom.scaleBy, 0.7));
+document.getElementById('zoomReset').addEventListener('click', ()=> svg.transition().call(zoom.transform, d3.zoomIdentity));
+
+/* ============================================================
+   CHART.JS — 3 charts
+   ============================================================ */
+Chart.defaults.font.family = "'Geist', sans-serif";
+Chart.defaults.color = '#C9BFA8';
+Chart.defaults.borderColor = '#2B2620';
+
+// Compute aggregates
+const pestelCounts = {P:0,E:0,S:0,T:0,A:0,V:0,L:0};
+const regionCounts = {};
+const yearCounts = {};
+let total = 0;
+COUNTRIES.forEach(c => {
+  c.initiatives.forEach(it => {
+    total++;
+    it.tags.forEach(t => pestelCounts[t] = (pestelCounts[t]||0) + 1);
+    regionCounts[c.region] = (regionCounts[c.region]||0) + 1;
+    if(it.year) yearCounts[it.year] = (yearCounts[it.year]||0) + 1;
+  });
+});
+
+const allYears = Object.keys(yearCounts).map(Number).sort((a,b)=>a-b);
+const minY = Math.min(...allYears), maxY = Math.max(...allYears);
+const yearLabels = []; const yearData = [];
+for(let y = minY; y <= maxY; y++){
+  yearLabels.push(y);
+  yearData.push(yearCounts[y] || 0);
+}
+
+// Chart 1: PESTEL doughnut
+new Chart(document.getElementById('chartPestel'), {
+  type:'doughnut',
+  data:{
+    labels: Object.keys(pestelCounts).map(k => CATEGORIES[k].label),
+    datasets:[{
+      data: Object.values(pestelCounts),
+      backgroundColor: Object.keys(pestelCounts).map(k => CATEGORIES[k].color),
+      borderColor:'#0E0D0B',
+      borderWidth:2,
+      hoverOffset:14
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    cutout:'58%',
+    plugins:{
+      legend:{
+        position:'right',
+        labels:{
+          font:{family:'JetBrains Mono', size:10, weight:500},
+          color:'#C9BFA8',
+          padding:10,
+          boxWidth:10,
+          boxHeight:10,
+          usePointStyle:true,
+          pointStyle:'rect'
+        }
+      },
+      tooltip:{
+        backgroundColor:'#F2EBDC', titleColor:'#0E0D0B', bodyColor:'#0E0D0B',
+        bodyFont:{family:'Geist', size:13},
+        titleFont:{family:'Fraunces', size:14, weight:500, style:'italic'},
+        padding:14, cornerRadius:0, displayColors:false,
+        callbacks:{
+          label: (ctx)=> ` ${ctx.parsed} iniciativas (${(ctx.parsed/total*100).toFixed(0)}% do total)`
+        }
+      }
+    }
+  }
+});
+
+// Chart 2: Region bar
+const regionEntries = Object.entries(regionCounts).sort((a,b)=>b[1]-a[1]);
+new Chart(document.getElementById('chartRegion'), {
+  type:'bar',
+  data:{
+    labels: regionEntries.map(e=>e[0]),
+    datasets:[{
+      data: regionEntries.map(e=>e[1]),
+      backgroundColor: ['#E85D3F','#82B19F','#D9A84A','#7FA4D9','#B57BAE','#6E8AB8','#9ABF8C'],
+      borderRadius:0,
+      borderSkipped:false
+    }]
+  },
+  options:{
+    indexAxis:'y',
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:'#F2EBDC', titleColor:'#0E0D0B', bodyColor:'#0E0D0B',
+        bodyFont:{family:'Geist', size:13}, titleFont:{family:'Fraunces', size:14, weight:500, style:'italic'},
+        padding:14, cornerRadius:0, displayColors:false,
+        callbacks:{ label: (ctx)=> ` ${ctx.parsed.x} iniciativas` }
+      }
+    },
+    scales:{
+      x:{grid:{color:'#2B2620', drawBorder:false}, ticks:{color:'#8A8273', font:{family:'JetBrains Mono', size:10}}},
+      y:{grid:{display:false}, ticks:{color:'#C9BFA8', font:{family:'Geist', size:12, weight:500}}}
+    }
+  }
+});
+
+// Chart 3: Timeline area
+new Chart(document.getElementById('chartTimeline'), {
+  type:'line',
+  data:{
+    labels: yearLabels,
+    datasets:[{
+      data: yearData,
+      borderColor:'#E85D3F',
+      backgroundColor:'rgba(232,93,63,.18)',
+      fill:true,
+      tension:.35,
+      pointRadius:0,
+      pointHoverRadius:6,
+      pointHoverBackgroundColor:'#F2EBDC',
+      pointHoverBorderColor:'#E85D3F',
+      pointHoverBorderWidth:2,
+      borderWidth:2
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:'#F2EBDC', titleColor:'#0E0D0B', bodyColor:'#0E0D0B',
+        bodyFont:{family:'Geist', size:13}, titleFont:{family:'Fraunces', size:14, weight:500, style:'italic'},
+        padding:14, cornerRadius:0, displayColors:false,
+        callbacks:{
+          title: (items)=> items[0].label,
+          label: (ctx)=> ` ${ctx.parsed.y} iniciativa(s) implantada(s)`
+        }
+      }
+    },
+    scales:{
+      x:{
+        grid:{color:'#2B2620', drawBorder:false},
+        ticks:{
+          color:'#8A8273', font:{family:'JetBrains Mono', size:10},
+          maxTicksLimit:8
+        }
+      },
+      y:{
+        grid:{color:'#2B2620', drawBorder:false},
+        ticks:{color:'#8A8273', font:{family:'JetBrains Mono', size:10}, stepSize:1}
+      }
+    },
+    interaction:{intersect:false, mode:'index'}
+  }
+});
+
+/* ============================================================
+   REVEAL ON SCROLL
+   ============================================================ */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.1, rootMargin:'0px 0px -40px 0px'});
+
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
